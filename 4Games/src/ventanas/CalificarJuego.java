@@ -5,6 +5,8 @@
  */
 package ventanas;
 
+import java.awt.Color;
+
 /**
  *
  * @author Budha
@@ -18,6 +20,7 @@ public class CalificarJuego extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         this.setTitle("Calificar Juego");
+        this.getContentPane().setBackground(new Color (243,245,246));
     }
 
     /**
