@@ -5,6 +5,8 @@
  */
 package pkg4games;
 
+import ventanas.IniciarSesion;
+
 /**
  *
  * @author Budha
@@ -16,6 +18,8 @@ public class Main {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        IniciarSesion is = new IniciarSesion();
+        is.setVisible(true);
     }
     
 }
