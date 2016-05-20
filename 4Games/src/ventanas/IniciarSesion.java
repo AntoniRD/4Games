@@ -5,7 +5,12 @@
  */
 package ventanas;
 
+import clases.Conexio;
 import java.awt.Color;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -19,7 +24,7 @@ public class IniciarSesion extends javax.swing.JFrame {
     public IniciarSesion() {
         initComponents();
         this.setTitle("Iniciar Sesión");
-        this.getContentPane().setBackground(new Color (243,245,246));
+        this.getContentPane().setBackground(new Color(243, 245, 246));
     }
 
     /**
@@ -41,7 +46,7 @@ public class IniciarSesion extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel2.setText("Nombre Usuario");
+        jLabel2.setText("DNI Usuario");
 
         jLabel3.setText("Contraseña");
 
@@ -71,12 +76,17 @@ public class IniciarSesion extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel3)
-                        .addComponent(jLabel2))
-                    .addComponent(jButtonCrearCuenta))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addGap(3, 3, 3))
+                            .addComponent(jButtonCrearCuenta)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel2)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
@@ -97,8 +107,8 @@ public class IniciarSesion extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(52, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jTextFieldNombreUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldNombreUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
                 .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
@@ -127,10 +137,64 @@ public class IniciarSesion extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonSalirActionPerformed
 
     private void jButtonAccederActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAccederActionPerformed
-        // TODO add your handling code here:
-        MenuPrincipal mp = new MenuPrincipal(new javax.swing.JFrame(), true);
-        mp.setVisible(true);
+        String query;
+        String dni = jTextFieldNombreUsuario.getText();
+        String passwd = guardarPassword();
+
+        //Conexión a base de datos.
+        Conexio mysql = new Conexio();
+        Connection conn = mysql.conectar();
+
+        query = "SELECT * FROM Usuarios "
+                + "WHERE Dni='" + dni + "' AND Password='" + passwd + "'";
+
+        try {
+            //Ejecución de consulta.
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(query);
+
+            /**
+             * Si encuentra la tupla, el usuario existe.
+             */
+            if (rs.next()) {
+                    /**
+                     * Si el usuario esta dado de alta, muestra el menú con
+                     * todas las opciones disponibles.
+                     */
+                    MenuPrincipal mp = new MenuPrincipal(new javax.swing.JFrame(), true);
+                    mp.setVisible(true);
+            }else{
+                JOptionPane.showMessageDialog(null, "El usuario no esta registrado en la base de datos");
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error inesperado: " + ex.getMessage());
+        }finally{
+            //Cierra la conexión con la base de datos.
+            if (conn != null){
+                try {
+                    conn.close();
+                    conn = null;
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Error al cerrar conexiones: " + e.getMessage());
+                }
+            }
+        }
     }//GEN-LAST:event_jButtonAccederActionPerformed
+
+    /**
+     * Transforma la contraseña en cadena.
+     * @return contraseña en formato de cadena.
+     */
+    private String guardarPassword() {
+        String pass = "";
+        int longPasswd = jPasswordFieldContraseña.getPassword().length;
+        char[] passwd = new char[longPasswd];
+        passwd = jPasswordFieldContraseña.getPassword();
+        for (int i = 0; i < longPasswd; i++) {
+            pass += passwd[i];
+        }
+        return pass;
+    }
 
     /**
      * @param args the command line arguments
