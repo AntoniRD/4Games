@@ -14,7 +14,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -24,7 +23,6 @@ public class CrearCuenta extends javax.swing.JDialog {
 
     //Atributos
     private String dni, contrasenya = "", usuario, correo;
-    private DefaultTableModel modelo;
 
     /**
      * Creates new form CrearCuenta
@@ -71,6 +69,11 @@ public class CrearCuenta extends javax.swing.JDialog {
         jTextFieldDni.setText("43215043o");
 
         jTextFieldCorreoElectronico.setText("Ren@gmail.com");
+        jTextFieldCorreoElectronico.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jTextFieldCorreoElectronicoMouseEntered(evt);
+            }
+        });
 
         jButtonCrearUsuario.setText("Crear");
         jButtonCrearUsuario.addActionListener(new java.awt.event.ActionListener() {
@@ -194,6 +197,15 @@ public class CrearCuenta extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonCrearUsuarioActionPerformed
 
     /**
+     * Muestra la ayuda de los formatos válidos de correos permitidos.
+     * @param evt 
+     */
+    private void jTextFieldCorreoElectronicoMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextFieldCorreoElectronicoMouseEntered
+        // TODO add your handling code here:
+        jTextFieldCorreoElectronico.setToolTipText("Los formatos permitidos: @gmail.com, @hotmail.com, @hotmail.es, @yahoo.com, @yahoo.es, @live.com, @live.es ");
+    }//GEN-LAST:event_jTextFieldCorreoElectronicoMouseEntered
+
+    /**
      * Comprueba que todas las casillas han sido rellenadas.
      * @return 
      */
@@ -268,12 +280,10 @@ public class CrearCuenta extends javax.swing.JDialog {
     private void insertarUsuario(){
         
         //Variables
-        String[] columnas = {"Dni", "NombreUsuario", "Password", "Email"};
         String query = "";
         int n;
         
         //Proceso
-        modelo = new DefaultTableModel(null, columnas);
         Conexio mysql = new Conexio();
         Connection cn = mysql.conectar();
         
@@ -332,9 +342,6 @@ public class CrearCuenta extends javax.swing.JDialog {
                 JOptionPane.showMessageDialog(null, "No has introducido la @.");
             }
         }
-        
-        
-        
         return validado;
     }
     

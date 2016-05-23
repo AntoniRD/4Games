@@ -122,6 +122,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Ren@gmail.com"/>
       </Properties>
+      <Events>
+        <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jTextFieldCorreoElectronicoMouseEntered"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="jButtonCrearUsuario">
       <Properties>
