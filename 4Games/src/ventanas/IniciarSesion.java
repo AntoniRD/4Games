@@ -141,55 +141,70 @@ public class IniciarSesion extends javax.swing.JFrame {
         String dni = jTextFieldNombreUsuario.getText();
         String passwd = guardarPassword();
 
-        //Conexión a base de datos.
-        Conexio mysql = new Conexio();
-        Connection conn = mysql.conectar();
+        if (!dni.isEmpty()) {
+            if (!passwd.isEmpty()) {
+                if (passwd.length() <= 45) {
+                //Conexión a base de datos.
+                Conexio mysql = new Conexio();
+                Connection conn = mysql.conectar();
 
-        query = "SELECT * FROM Usuarios "
-                + "WHERE Dni='" + dni + "' AND Password='" + passwd + "'";
+                query = "SELECT * FROM Usuarios "
+                        + "WHERE Dni='" + dni + "' AND Password='" + passwd + "'";
 
-        try {
-            //Ejecución de consulta.
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery(query);
-            
-            //Si encuentra la tupla, el usuario existe.
-            if (rs.next()) {
-                     //Si el usuario esta dado de alta, muestra el menú con
-                     // todas las opciones disponibles.
-                    MenuPrincipal mp = new MenuPrincipal(new javax.swing.JFrame(), true);
-                    mp.setDniIniciado(dni);
-                    mp.setVisible(true);
-            }else{
-                JOptionPane.showMessageDialog(null, "El usuario no esta registrado en la base de datos");
-            }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Error inesperado: " + ex.getMessage());
-        }finally{
-            //Cierra la conexión con la base de datos.
-            if (conn != null){
                 try {
-                    conn.close();
-                    conn = null;
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(null, "Error al cerrar conexiones: " + e.getMessage());
+                    //Ejecución de consulta.
+                    Statement st = conn.createStatement();
+                    ResultSet rs = st.executeQuery(query);
+
+                    //Si encuentra la tupla, el usuario existe.
+                    if (rs.next()) {
+                        //Si el usuario esta dado de alta, muestra el menú con
+                        // todas las opciones disponibles.
+                        MenuPrincipal mp = new MenuPrincipal(new javax.swing.JFrame(), true);
+                        mp.setDniIniciado(dni);
+                        mp.setVisible(true);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "El usuario no esta registrado en la base de datos");
+                    }
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Error inesperado: " + ex.getMessage());
+                } finally {
+                    //Cierra la conexión con la base de datos.
+                    if (conn != null) {
+                        try {
+                            conn.close();
+                            conn = null;
+                        } catch (Exception e) {
+                            JOptionPane.showMessageDialog(null, "Error al cerrar conexiones: " + e.getMessage());
+                        }
+                    }
                 }
+                }else{
+                    JOptionPane.showMessageDialog(null, "La longitud máxima de la contraseña es de 45 caracteres");
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "El campo de contraseña, está vacia");
             }
+        } else {
+            JOptionPane.showMessageDialog(null, "El campo DNI, está vacío");
         }
     }//GEN-LAST:event_jButtonAccederActionPerformed
 
     /**
      * Transforma la contraseña en cadena.
+     *
      * @return contraseña en formato de cadena.
      */
     private String guardarPassword() {
         String pass = "";
         int longPasswd = jPasswordFieldContraseña.getPassword().length;
+
         char[] passwd = new char[longPasswd];
         passwd = jPasswordFieldContraseña.getPassword();
         for (int i = 0; i < longPasswd; i++) {
             pass += passwd[i];
         }
+
         return pass;
     }
 
