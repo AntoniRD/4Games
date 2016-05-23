@@ -13,6 +13,9 @@ import java.awt.Color;
  */
 public class MenuPrincipal extends javax.swing.JDialog {
 
+    //Variables y constantes globales.
+    public String dni;
+    
     /**
      * Creates new form MenuPrincipal
      */
@@ -124,6 +127,14 @@ public class MenuPrincipal extends javax.swing.JDialog {
         setVisible(false);
     }//GEN-LAST:event_jButtonCerrarSesionActionPerformed
 
+    public void setDniIniciado(String dni){
+        this.dni = dni;
+    }
+    
+    public String getDniIniciado(){
+        return dni;
+    }
+    
     /**
      * @param args the command line arguments
      */

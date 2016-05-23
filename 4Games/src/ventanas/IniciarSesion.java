@@ -152,16 +152,13 @@ public class IniciarSesion extends javax.swing.JFrame {
             //Ejecución de consulta.
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(query);
-
-            /**
-             * Si encuentra la tupla, el usuario existe.
-             */
+            
+            //Si encuentra la tupla, el usuario existe.
             if (rs.next()) {
-                    /**
-                     * Si el usuario esta dado de alta, muestra el menú con
-                     * todas las opciones disponibles.
-                     */
+                     //Si el usuario esta dado de alta, muestra el menú con
+                     // todas las opciones disponibles.
                     MenuPrincipal mp = new MenuPrincipal(new javax.swing.JFrame(), true);
+                    mp.setDniIniciado(dni);
                     mp.setVisible(true);
             }else{
                 JOptionPane.showMessageDialog(null, "El usuario no esta registrado en la base de datos");
