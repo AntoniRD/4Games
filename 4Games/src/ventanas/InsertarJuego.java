@@ -5,7 +5,15 @@
  */
 package ventanas;
 
+import clases.Conexio;
 import java.awt.Color;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -20,7 +28,7 @@ public class InsertarJuego extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         this.setTitle("Insertar Juego");
-        this.getContentPane().setBackground(new Color (243,245,246));
+        this.getContentPane().setBackground(new Color(243, 245, 246));
     }
 
     /**
@@ -49,6 +57,11 @@ public class InsertarJuego extends javax.swing.JDialog {
         jButtonInsertar = new javax.swing.JButton();
         jButtonCerrar = new javax.swing.JButton();
         jCheckBoxMultijugador = new javax.swing.JCheckBox();
+        jCheckBoxWii = new javax.swing.JCheckBox();
+        jCheckBoxWiiU = new javax.swing.JCheckBox();
+        jCheckBox3DS = new javax.swing.JCheckBox();
+        jCheckBoxXBox360 = new javax.swing.JCheckBox();
+        jCheckBoxXBoxOne = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -58,6 +71,11 @@ public class InsertarJuego extends javax.swing.JDialog {
 
         jLabel3.setText("Plataformas");
 
+        jTextPaneDescripcion.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextPaneDescripcionKeyPressed(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTextPaneDescripcion);
 
         jCheckBoxPS3.setText("PS3");
@@ -82,6 +100,11 @@ public class InsertarJuego extends javax.swing.JDialog {
         jCheckBoxIphone.setText("iPhone");
 
         jButtonInsertar.setText("Insertar");
+        jButtonInsertar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonInsertarActionPerformed(evt);
+            }
+        });
 
         jButtonCerrar.setText("Cerrar");
         jButtonCerrar.addActionListener(new java.awt.event.ActionListener() {
@@ -92,6 +115,16 @@ public class InsertarJuego extends javax.swing.JDialog {
 
         jCheckBoxMultijugador.setText("Multijugador");
 
+        jCheckBoxWii.setText("Wii");
+
+        jCheckBoxWiiU.setText("WiiU");
+
+        jCheckBox3DS.setText("3DS");
+
+        jCheckBoxXBox360.setText("XBox360");
+
+        jCheckBoxXBoxOne.setText("XBoxOne");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -99,40 +132,49 @@ public class InsertarJuego extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBoxMultijugador)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
-                            .addComponent(jLabel2))
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3))
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane1)
-                            .addComponent(jTextFieldNombreJuego, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addGap(40, 40, 40)
-                            .addComponent(jButtonInsertar)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButtonCerrar))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addComponent(jLabel3)
-                            .addGap(18, 18, 18)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jCheckBoxPS3)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jCheckBoxPS4))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jCheckBoxPC)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(jCheckBoxMAC))
-                                .addComponent(jCheckBoxAndroid))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jCheckBoxWeb)
-                                .addComponent(jCheckBoxPSvita)
-                                .addComponent(jCheckBoxIphone)))))
-                .addContainerGap(31, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jCheckBoxPS3)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jCheckBoxPS4))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jCheckBoxPC)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jCheckBoxMAC)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jCheckBoxWeb)
+                                    .addComponent(jCheckBoxPSvita)))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jScrollPane1)
+                                .addComponent(jTextFieldNombreJuego, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jCheckBoxWii)
+                                        .addGap(12, 12, 12)
+                                        .addComponent(jCheckBoxWiiU))
+                                    .addComponent(jCheckBoxAndroid)
+                                    .addComponent(jCheckBoxXBox360))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jCheckBoxIphone)
+                                    .addComponent(jCheckBox3DS)
+                                    .addComponent(jCheckBoxXBoxOne)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButtonInsertar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButtonCerrar))))
+                    .addComponent(jCheckBoxMultijugador))
+                .addContainerGap(39, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -145,12 +187,12 @@ public class InsertarJuego extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(16, 16, 16)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jCheckBoxPS3)
                     .addComponent(jCheckBoxPS4)
-                    .addComponent(jCheckBoxPSvita))
+                    .addComponent(jCheckBoxPSvita)
+                    .addComponent(jCheckBoxPS3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jCheckBoxPC)
@@ -158,15 +200,24 @@ public class InsertarJuego extends javax.swing.JDialog {
                     .addComponent(jCheckBoxWeb))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jCheckBoxWii)
+                    .addComponent(jCheckBoxWiiU)
+                    .addComponent(jCheckBox3DS))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jCheckBoxAndroid)
                     .addComponent(jCheckBoxIphone))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jCheckBoxXBox360)
+                    .addComponent(jCheckBoxXBoxOne))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jCheckBoxMultijugador)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonInsertar)
                     .addComponent(jButtonCerrar))
-                .addGap(20, 20, 20))
+                .addGap(24, 24, 24))
         );
 
         pack();
@@ -182,6 +233,162 @@ public class InsertarJuego extends javax.swing.JDialog {
         MenuPrincipal mp = new MenuPrincipal(new javax.swing.JFrame(), true);
         mp.setVisible(true);
     }//GEN-LAST:event_jButtonCerrarActionPerformed
+
+    private void jButtonInsertarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonInsertarActionPerformed
+        Conexio mysql = new Conexio();
+        Connection conn = mysql.conectar();
+
+        int n, m = -1; //Guardar cambios en base de datos
+        boolean ok; //Validar variables
+        String queryJuegos; //Consulta de la tabla Juegos
+        String queryJuegos_has_Plataformas; //Consulta de la tabla Juegos_has_Plataformas
+
+        String nombreJuego, descripcion;
+        ArrayList<Integer> plataformas = new ArrayList<Integer>();
+        boolean multijugador = false;
+
+        nombreJuego = jTextFieldNombreJuego.getText();
+        descripcion = jTextPaneDescripcion.getText();
+        plataformas = plataformasSeleccionadas(conn);
+        if (jCheckBoxMultijugador.isSelected()) {
+            multijugador = true;
+        }
+
+        ok = validarVariables(nombreJuego, descripcion, plataformas);
+
+        if (ok) {
+            queryJuegos = "INSERT INTO Juegos VALUES (?, ?, ?)";
+            queryJuegos_has_Plataformas = "INSERT INTO Juegos_has_Plataformas VALUES (?, ?)";
+            try {
+                //Guarda los valores obtenidos de los campos en la base de datos.
+                //Tabla JUEGOS
+                PreparedStatement psJuegos = conn.prepareStatement(queryJuegos);
+                psJuegos.setString(1, nombreJuego);
+                psJuegos.setString(2, descripcion);
+                psJuegos.setBoolean(3, multijugador);
+
+                n = psJuegos.executeUpdate();
+
+                //Tabla Juegos_has_Plataformas            
+                PreparedStatement psJuegosPlataformas = conn.prepareStatement(queryJuegos_has_Plataformas);
+                for (int i = 0; i < plataformas.size(); i++) {
+                    psJuegosPlataformas.setString(1, nombreJuego);
+                    psJuegosPlataformas.setInt(2, plataformas.get(i));
+                    m = psJuegosPlataformas.executeUpdate();
+                }
+
+                // 1:OK, -1:ERROR
+                if (n > 0 && m > 0) {
+                    JOptionPane.showMessageDialog(null, "Juego insertado satisfactoriamente!");
+                }
+
+            } catch (SQLException sqlEx) {
+                if (sqlEx.getErrorCode() == 1062) {
+                    JOptionPane.showMessageDialog(null, "El nombre del juego ya existe!");
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Error inesperado: " + ex.getMessage());
+            } finally {
+                //Cierre de conexiones con la base de datos.
+                if (conn != null) {
+                    try {
+                        conn.close();
+                        conn = null;
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(null, "Error al cerrar conexiones");
+                    }
+                }
+            }
+        }
+    }//GEN-LAST:event_jButtonInsertarActionPerformed
+
+    private void jTextPaneDescripcionKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextPaneDescripcionKeyPressed
+        
+
+    }//GEN-LAST:event_jTextPaneDescripcionKeyPressed
+
+    private boolean validarVariables(String nombreJuego, String descripcion, ArrayList<Integer> plataformas) {
+        boolean resultado = true;
+
+        if (nombreJuego.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "El campo 'Nombre juego' está vacia");
+            resultado = false;
+        }
+
+        if (nombreJuego.length() > 45 && resultado) {
+            JOptionPane.showMessageDialog(null, "El rango del nombre es de 45 caracteres");
+            resultado = false;
+        }
+
+        if (descripcion.length() > 100 && resultado) {
+            JOptionPane.showMessageDialog(null, "El rango de la descripcion es de 100 caracteres");
+            resultado = false;
+        }
+
+        if (plataformas.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No has seleccionado ninguna plataforma");
+            resultado = false;
+        }
+        return resultado;
+    }
+
+    /**
+     * Comprueba todos los campos que selecciona el usuario.
+     *
+     * @return Devuelve la cadena con las opciones seleccionadas.
+     */
+    private ArrayList<Integer> plataformasSeleccionadas(Connection conn) {
+        String query = "SELECT * FROM Plataformas";
+        ArrayList<Integer> plataformasSeleccionadas = new ArrayList<Integer>();
+        try {
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(query);
+            while (rs.next()) {
+                if (jCheckBoxPS3.isSelected() && jCheckBoxPS3.getText().equalsIgnoreCase(rs.getString("NombrePlataforma"))) {
+                    plataformasSeleccionadas.add(rs.getInt("IdPlataforma"));
+                }
+                if (jCheckBoxPS4.isSelected() && jCheckBoxPS4.getText().equalsIgnoreCase(rs.getString("NombrePlataforma"))) {
+                    plataformasSeleccionadas.add(rs.getInt("IdPlataforma"));
+                }
+                if (jCheckBoxPSvita.isSelected() && jCheckBoxPSvita.getText().equalsIgnoreCase(rs.getString("NombrePlataforma"))) {
+                    plataformasSeleccionadas.add(rs.getInt("IdPlataforma"));
+                }
+                if (jCheckBoxPC.isSelected() && jCheckBoxPC.getText().equalsIgnoreCase(rs.getString("NombrePlataforma"))) {
+                    plataformasSeleccionadas.add(rs.getInt("IdPlataforma"));
+                }
+                if (jCheckBoxMAC.isSelected() && jCheckBoxMAC.getText().equalsIgnoreCase(rs.getString("NombrePlataforma"))) {
+                    plataformasSeleccionadas.add(rs.getInt("IdPlataforma"));
+                }
+                if (jCheckBoxWeb.isSelected() && jCheckBoxWeb.getText().equalsIgnoreCase(rs.getString("NombrePlataforma"))) {
+                    plataformasSeleccionadas.add(rs.getInt("IdPlataforma"));
+                }
+                if (jCheckBoxWii.isSelected() && jCheckBoxWii.getText().equalsIgnoreCase(rs.getString("NombrePlataforma"))) {
+                    plataformasSeleccionadas.add(rs.getInt("IdPlataforma"));
+                }
+                if (jCheckBoxWiiU.isSelected() && jCheckBoxWiiU.getText().equalsIgnoreCase(rs.getString("NombrePlataforma"))) {
+                    plataformasSeleccionadas.add(rs.getInt("IdPlataforma"));
+                }
+                if (jCheckBox3DS.isSelected() && jCheckBox3DS.getText().equalsIgnoreCase(rs.getString("NombrePlataforma"))) {
+                    plataformasSeleccionadas.add(rs.getInt("IdPlataforma"));
+                }
+                if (jCheckBoxAndroid.isSelected() && jCheckBoxAndroid.getText().equalsIgnoreCase(rs.getString("NombrePlataforma"))) {
+                    plataformasSeleccionadas.add(rs.getInt("IdPlataforma"));
+                }
+                if (jCheckBoxIphone.isSelected() && jCheckBoxIphone.getText().equalsIgnoreCase(rs.getString("NombrePlataforma"))) {
+                    plataformasSeleccionadas.add(rs.getInt("IdPlataforma"));
+                }
+                if (jCheckBoxXBox360.isSelected() && jCheckBoxXBox360.getText().equalsIgnoreCase(rs.getString("NombrePlataforma"))) {
+                    plataformasSeleccionadas.add(rs.getInt("IdPlataforma"));
+                }
+                if (jCheckBoxXBoxOne.isSelected() && jCheckBoxXBoxOne.getText().equalsIgnoreCase(rs.getString("NombrePlataforma"))) {
+                    plataformasSeleccionadas.add(rs.getInt("IdPlataforma"));
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error inesperado: " + e.getMessage());
+        }
+        return plataformasSeleccionadas;
+    }
 
     /**
      * @param args the command line arguments
@@ -228,6 +435,7 @@ public class InsertarJuego extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCerrar;
     private javax.swing.JButton jButtonInsertar;
+    private javax.swing.JCheckBox jCheckBox3DS;
     private javax.swing.JCheckBox jCheckBoxAndroid;
     private javax.swing.JCheckBox jCheckBoxIphone;
     private javax.swing.JCheckBox jCheckBoxMAC;
@@ -237,6 +445,10 @@ public class InsertarJuego extends javax.swing.JDialog {
     private javax.swing.JCheckBox jCheckBoxPS4;
     private javax.swing.JCheckBox jCheckBoxPSvita;
     private javax.swing.JCheckBox jCheckBoxWeb;
+    private javax.swing.JCheckBox jCheckBoxWii;
+    private javax.swing.JCheckBox jCheckBoxWiiU;
+    private javax.swing.JCheckBox jCheckBoxXBox360;
+    private javax.swing.JCheckBox jCheckBoxXBoxOne;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
