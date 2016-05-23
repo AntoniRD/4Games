@@ -149,6 +149,16 @@ public class CrearCuenta extends javax.swing.JDialog {
         this.setVisible(false);
     }//GEN-LAST:event_jButtonCerrarVentanaCrearCuentaActionPerformed
 
+    /**
+     * Llama al método para añadir un usuario despues de comprobar que:
+     * - Los campos estén todos rellenados.
+     * - El DNI introducido tenga un formato válido.
+     * - La contraseña no sobrepase los 45 carácteres.
+     * - El nombre de usuario no sobrepase los 45 carácteres.
+     * - El correo tenga un formato correcto y pertenezca al rango de los 
+     *   válidos.
+     * @param evt 
+     */
     private void jButtonCrearUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCrearUsuarioActionPerformed
         // TODO add your handling code here:
         if (rellenado()) {
@@ -181,10 +191,12 @@ public class CrearCuenta extends javax.swing.JDialog {
         else {
             JOptionPane.showMessageDialog(null, "Debes rellenar todos los campos.");
         }
-
-
     }//GEN-LAST:event_jButtonCrearUsuarioActionPerformed
 
+    /**
+     * Comprueba que todas las casillas han sido rellenadas.
+     * @return 
+     */
     private boolean rellenado() {
 
         //Variables
@@ -204,6 +216,12 @@ public class CrearCuenta extends javax.swing.JDialog {
         return rellenado;
     }
 
+    /**
+     * Comprueba en la base de datos si existe el DNI del usuario 
+     * que quiere crear.
+     * @param dni
+     * @return 
+     */
     private boolean comprobarExistencia(String dni) {
 
         //Variables
@@ -243,6 +261,10 @@ public class CrearCuenta extends javax.swing.JDialog {
         return existe;
     }
 
+    /**
+     * Método que una vez comprobado todo los campos y valores introducidos,
+     * introduce el usuario en la tabla.
+     */
     private void insertarUsuario(){
         
         //Variables
@@ -274,21 +296,27 @@ public class CrearCuenta extends javax.swing.JDialog {
         }
     }
     
+    /**
+     * Valida que el correo sea del formato válido.
+     * @param aux
+     * @return 
+     */
     private boolean validarCorreo(String aux){
         
         //Variables
         boolean validado=false;
         String [] validos = {"@gmail.com" , "@hotmail.com" , "@hotmail.es" , "@yahoo.com" , "@yahoo.es" , "@live.com" , "@live.es"};
         String arroba;
-        int i, contador=0;
+        int i, contador=0, controlador=0;
         
         //Proceso
         for(i=0; i<aux.length(); i++){
             if(aux.charAt(i)=='@'){
                 contador=i;
+                controlador++;
             }
         }
-        if(contador!=0){
+        if(contador!=0 && controlador==1){
             arroba=aux.substring(contador, aux.length());
             for(i=0;i<7; i++){
                 if(arroba.contentEquals(validos[i])){
@@ -297,7 +325,12 @@ public class CrearCuenta extends javax.swing.JDialog {
             }
         }
         else{
-            JOptionPane.showMessageDialog(null, "No has introducido la @.");
+            if(controlador>1){
+                JOptionPane.showMessageDialog(null, "Solo puedes introducir una @.");
+            }
+            else{
+                JOptionPane.showMessageDialog(null, "No has introducido la @.");
+            }
         }
         
         
@@ -305,6 +338,13 @@ public class CrearCuenta extends javax.swing.JDialog {
         return validado;
     }
     
+    /**
+     * Valida el formato del DNI. Primero la longitud, seguido de si tiene una 
+     * letra, está en el sitio correcto y si la letra es la que toca a ese
+     * número de DNI.
+     * @param dni
+     * @return 
+     */
     private boolean validarDni(String dni){
         
         //Variables
