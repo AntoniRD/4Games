@@ -109,19 +109,10 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="jTextFieldNombreUsuario">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Killo"/>
-      </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="jTextFieldDni">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="43215043o"/>
-      </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="jTextFieldCorreoElectronico">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Ren@gmail.com"/>
-      </Properties>
       <Events>
         <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jTextFieldCorreoElectronicoMouseEntered"/>
       </Events>
@@ -143,9 +134,6 @@
       </Events>
     </Component>
     <Component class="javax.swing.JPasswordField" name="jPasswordFieldContrase&#xf1;a">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Pene"/>
-      </Properties>
     </Component>
   </SubComponents>
 </Form>

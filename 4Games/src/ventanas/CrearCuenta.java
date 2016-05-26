@@ -64,11 +64,6 @@ public class CrearCuenta extends javax.swing.JDialog {
 
         jLabel5.setText("Correo electrónico");
 
-        jTextFieldNombreUsuario.setText("Killo");
-
-        jTextFieldDni.setText("43215043o");
-
-        jTextFieldCorreoElectronico.setText("Ren@gmail.com");
         jTextFieldCorreoElectronico.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 jTextFieldCorreoElectronicoMouseEntered(evt);
@@ -88,8 +83,6 @@ public class CrearCuenta extends javax.swing.JDialog {
                 jButtonCerrarVentanaCrearCuentaActionPerformed(evt);
             }
         });
-
-        jPasswordFieldContraseña.setText("Pene");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -150,6 +143,7 @@ public class CrearCuenta extends javax.swing.JDialog {
     private void jButtonCerrarVentanaCrearCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCerrarVentanaCrearCuentaActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
+        new MenuPrincipal(new javax.swing.JFrame(), true).setVisible(true);
     }//GEN-LAST:event_jButtonCerrarVentanaCrearCuentaActionPerformed
 
     /**
@@ -164,35 +158,11 @@ public class CrearCuenta extends javax.swing.JDialog {
      */
     private void jButtonCrearUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCrearUsuarioActionPerformed
         // TODO add your handling code here:
-        if (rellenado()) {
-            dni = jTextFieldDni.getText();//Varchar(9)
-            if(validarDni(dni.toUpperCase())){
-                contrasenya = new String (jPasswordFieldContraseña.getPassword());//Varchar(45)
-                if(contrasenya.length()<=45){
-                    usuario = jTextFieldNombreUsuario.getText();//Varchar(45)
-                    if(usuario.length()<=45){
-                        correo = jTextFieldCorreoElectronico.getText();//Varchar(100)
-                        if(validarCorreo(correo)){
-                            if (!comprobarExistencia(dni)) {
-                            insertarUsuario();
-                            this.setVisible(false);
-                            }
-                        }
-                        else{
-                            JOptionPane.showMessageDialog(null, "El correo que has introducido no pertenece a los permitidos:\n@gmail.com, @hotmail.com, @hotmail.es, @yahoo.com, @yahoo.es, @live.com, @live.es.");
-                        }
-                    }
-                    else{
-                        JOptionPane.showMessageDialog(null, "Has excedido los 45 carácteres permitidos.");
-                    }
-                }
-                else{
-                    JOptionPane.showMessageDialog(null, "Has excedido los 45 carácteres permitidos.");
-                }
-            }
-        } 
-        else {
-            JOptionPane.showMessageDialog(null, "Debes rellenar todos los campos.");
+        if(jButtonCrearUsuario.getText()=="Crear"){
+            crearUsuario();
+        }
+        else{
+            aplicarModificacion();
         }
     }//GEN-LAST:event_jButtonCrearUsuarioActionPerformed
 
@@ -300,9 +270,18 @@ public class CrearCuenta extends javax.swing.JDialog {
             if(n > 0){
                 JOptionPane.showMessageDialog(null, "Usuario creado satisfactoriamente.");
             }
-            
         } catch (SQLException ex) {
             ex.printStackTrace();
+        }
+        finally {
+            if (cn != null) {
+                try {
+                    cn.close();
+                    cn = null;
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
         }
     }
     
@@ -384,6 +363,115 @@ public class CrearCuenta extends javax.swing.JDialog {
         return validado;
     }
     
+    private void crearUsuario(){
+        if (rellenado()) {
+            dni = jTextFieldDni.getText();//Varchar(9)
+            if(validarDni(dni.toUpperCase())){
+                contrasenya = new String (jPasswordFieldContraseña.getPassword());//Varchar(45)
+                if(contrasenya.length()<=45){
+                    usuario = jTextFieldNombreUsuario.getText();//Varchar(45)
+                    if(usuario.length()<=45){
+                        correo = jTextFieldCorreoElectronico.getText();//Varchar(100)
+                        if(validarCorreo(correo)){
+                            if (!comprobarExistencia(dni)) {
+                            insertarUsuario();
+                            this.setVisible(false);
+                            }
+                        }
+                        else{
+                            JOptionPane.showMessageDialog(null, "El correo que has introducido no pertenece a los permitidos:\n@gmail.com, @hotmail.com, @hotmail.es, @yahoo.com, @yahoo.es, @live.com, @live.es.");
+                        }
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(null, "Has excedido los 45 carácteres permitidos.");
+                    }
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "Has excedido los 45 carácteres permitidos.");
+                }
+            }
+        } 
+        else {
+            JOptionPane.showMessageDialog(null, "Debes rellenar todos los campos.");
+        }
+    }
+    
+    public void modificarUsuario(String dni){
+        
+        //Variables
+        String query = "";
+        
+        //Proceso
+        this.setTitle("Modificar Usuario");
+        this.jButtonCrearUsuario.setText("Modificar");
+        Conexio mysql = new Conexio();
+        Connection cn = mysql.conectar();
+        
+        query = "SELECT * FROM usuarios WHERE Dni='" + dni +"';" ;
+        this.dni=dni;
+        try {
+            Statement st = cn.createStatement();
+            ResultSet rs = st.executeQuery(query);
+
+            while (rs.next()) {
+                jTextFieldDni.setText(dni);
+                jTextFieldDni.setEditable(false);
+                jTextFieldNombreUsuario.setText(rs.getString("NombreUsuario"));
+                jPasswordFieldContraseña.setText(rs.getString("Password"));
+                jTextFieldCorreoElectronico.setText(rs.getString("Email"));
+            }
+        } 
+        catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        finally {
+            if (cn != null) {
+                try {
+                    cn.close();
+                    cn = null;
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }
+    
+    private void aplicarModificacion(){
+        
+        //Variables
+        String query = "";
+        int n;
+        
+        //Proceso
+        Conexio mysql = new Conexio();
+        Connection cn = mysql.conectar();
+        
+        query = "UPDATE usuarios SET NombreUsuario = ?, Password = ?, Email = ? WHERE Dni='" + dni + "';";
+        
+        try{
+            PreparedStatement pst = cn.prepareStatement(query);
+            pst.setString(1, jTextFieldNombreUsuario.getText());
+            pst.setString(2, new String(jPasswordFieldContraseña.getPassword()));
+            pst.setString(3, jTextFieldCorreoElectronico.getText());
+            
+            n = pst.executeUpdate();
+            if(n > 0){
+                JOptionPane.showMessageDialog(null, "Usuario modificado satisfactoriamente.");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        finally {
+            if (cn != null) {
+                try {
+                    cn.close();
+                    cn = null;
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }
     /**
      * @param args the command line arguments
      */
