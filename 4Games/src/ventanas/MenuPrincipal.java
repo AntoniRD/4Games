@@ -13,6 +13,9 @@ import java.awt.Color;
  */
 public class MenuPrincipal extends javax.swing.JDialog {
 
+    //Variables y constantes globales.
+    public String dni;
+    
     /**
      * Creates new form MenuPrincipal
      */
@@ -137,6 +140,7 @@ public class MenuPrincipal extends javax.swing.JDialog {
         is.setVisible(true);
     }//GEN-LAST:event_jButtonCerrarSesionActionPerformed
 
+
     private void jButtonModificarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarUsuarioActionPerformed
         // TODO add your handling code here:
         CrearCuenta cc = new CrearCuenta(new javax.swing.JFrame(), true);
@@ -145,6 +149,14 @@ public class MenuPrincipal extends javax.swing.JDialog {
         this.setVisible(false);
     }//GEN-LAST:event_jButtonModificarUsuarioActionPerformed
 
+    public void setDniIniciado(String dni){
+        this.dni = dni;
+    }
+    
+    public String getDniIniciado(){
+        return dni;
+    }
+    
     /**
      * @param args the command line arguments
      */
