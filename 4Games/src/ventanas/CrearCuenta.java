@@ -147,13 +147,7 @@ public class CrearCuenta extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonCerrarVentanaCrearCuentaActionPerformed
 
     /**
-     * Llama al método para añadir un usuario despues de comprobar que:
-     * - Los campos estén todos rellenados.
-     * - El DNI introducido tenga un formato válido.
-     * - La contraseña no sobrepase los 45 carácteres.
-     * - El nombre de usuario no sobrepase los 45 carácteres.
-     * - El correo tenga un formato correcto y pertenezca al rango de los 
-     *   válidos.
+     * 
      * @param evt 
      */
     private void jButtonCrearUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCrearUsuarioActionPerformed
@@ -363,6 +357,15 @@ public class CrearCuenta extends javax.swing.JDialog {
         return validado;
     }
     
+    /**
+     * Llama al método para añadir un usuario despues de comprobar que:
+     * - Los campos estén todos rellenados.
+     * - El DNI introducido tenga un formato válido.
+     * - La contraseña no sobrepase los 45 carácteres.
+     * - El nombre de usuario no sobrepase los 45 carácteres.
+     * - El correo tenga un formato correcto y pertenezca al rango de los 
+     *   válidos.
+     */
     private void crearUsuario(){
         if (rellenado()) {
             dni = jTextFieldDni.getText();//Varchar(9)
@@ -396,6 +399,11 @@ public class CrearCuenta extends javax.swing.JDialog {
         }
     }
     
+    /**
+     * Obtiene los datos del usuario que quiere modificar su cuenta y los coloca
+     * en los campos correspondientes.
+     * @param dni 
+     */
     public void modificarUsuario(String dni){
         
         //Variables
@@ -436,6 +444,10 @@ public class CrearCuenta extends javax.swing.JDialog {
         }
     }
     
+    /**
+     * En el momento en que el usuario pulsa en modificar hace la sentencia
+     * update para modificar en la base de datos el usuario.
+     */
     private void aplicarModificacion(){
         
         //Variables
@@ -472,6 +484,7 @@ public class CrearCuenta extends javax.swing.JDialog {
             }
         }
     }
+    
     /**
      * @param args the command line arguments
      */
