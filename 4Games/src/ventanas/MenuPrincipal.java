@@ -37,6 +37,7 @@ public class MenuPrincipal extends javax.swing.JDialog {
         jButtonConsultarListaJuegos = new javax.swing.JButton();
         jButtonCalificarJuegos = new javax.swing.JButton();
         jButtonCerrarSesion = new javax.swing.JButton();
+        jButtonModificarUsuario = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -68,6 +69,12 @@ public class MenuPrincipal extends javax.swing.JDialog {
             }
         });
 
+        jButtonModificarUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonModificarUsuarioActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -79,13 +86,17 @@ public class MenuPrincipal extends javax.swing.JDialog {
                     .addComponent(jButtonInsertarJuego, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButtonCalificarJuegos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButtonCerrarSesion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonModificarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addComponent(jButtonInsertarJuego)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButtonInsertarJuego, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButtonModificarUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addComponent(jButtonConsultarListaJuegos)
                 .addGap(18, 18, 18)
@@ -122,7 +133,17 @@ public class MenuPrincipal extends javax.swing.JDialog {
     private void jButtonCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCerrarSesionActionPerformed
         // TODO add your handling code here:
         setVisible(false);
+        IniciarSesion is = new IniciarSesion();
+        is.setVisible(true);
     }//GEN-LAST:event_jButtonCerrarSesionActionPerformed
+
+    private void jButtonModificarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarUsuarioActionPerformed
+        // TODO add your handling code here:
+        CrearCuenta cc = new CrearCuenta(new javax.swing.JFrame(), true);
+        cc.modificarUsuario(new IniciarSesion().dni);
+        cc.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_jButtonModificarUsuarioActionPerformed
 
     /**
      * @param args the command line arguments
@@ -171,6 +192,7 @@ public class MenuPrincipal extends javax.swing.JDialog {
     private javax.swing.JButton jButtonCerrarSesion;
     private javax.swing.JButton jButtonConsultarListaJuegos;
     private javax.swing.JButton jButtonInsertarJuego;
+    private javax.swing.JButton jButtonModificarUsuario;
     private javax.swing.JPopupMenu jPopupMenu1;
     // End of variables declaration//GEN-END:variables
 }

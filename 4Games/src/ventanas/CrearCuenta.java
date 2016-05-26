@@ -5,13 +5,24 @@
  */
 package ventanas;
 
+import clases.Conexio;
+import clases.ValidadorDNI;
 import java.awt.Color;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author Budha
  */
 public class CrearCuenta extends javax.swing.JDialog {
+
+    //Atributos
+    private String dni, contrasenya = "", usuario, correo;
 
     /**
      * Creates new form CrearCuenta
@@ -20,7 +31,7 @@ public class CrearCuenta extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         this.setTitle("Crear Usuario");
-        this.getContentPane().setBackground(new Color (243,245,246));
+        this.getContentPane().setBackground(new Color(243, 245, 246));
     }
 
     /**
@@ -53,7 +64,18 @@ public class CrearCuenta extends javax.swing.JDialog {
 
         jLabel5.setText("Correo electrónico");
 
+        jTextFieldCorreoElectronico.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jTextFieldCorreoElectronicoMouseEntered(evt);
+            }
+        });
+
         jButtonCrearUsuario.setText("Crear");
+        jButtonCrearUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonCrearUsuarioActionPerformed(evt);
+            }
+        });
 
         jButtonCerrarVentanaCrearCuenta.setText("Cerrar");
         jButtonCerrarVentanaCrearCuenta.addActionListener(new java.awt.event.ActionListener() {
@@ -75,21 +97,18 @@ public class CrearCuenta extends javax.swing.JDialog {
                         .addComponent(jButtonCerrarVentanaCrearCuenta)
                         .addGap(55, 55, 55))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel5)
-                                .addGap(24, 24, 24)
-                                .addComponent(jTextFieldCorreoElectronico, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel4))
-                                .addGap(38, 38, 38)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jTextFieldDni)
-                                    .addComponent(jTextFieldNombreUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
-                                    .addComponent(jPasswordFieldContraseña))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5))
+                        .addGap(28, 28, 28)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jTextFieldDni)
+                                .addComponent(jTextFieldNombreUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                                .addComponent(jPasswordFieldContraseña))
+                            .addComponent(jTextFieldCorreoElectronico, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(23, 23, 23))))
         );
         layout.setVerticalGroup(
@@ -124,8 +143,348 @@ public class CrearCuenta extends javax.swing.JDialog {
     private void jButtonCerrarVentanaCrearCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCerrarVentanaCrearCuentaActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
+        new MenuPrincipal(new javax.swing.JFrame(), true).setVisible(true);
     }//GEN-LAST:event_jButtonCerrarVentanaCrearCuentaActionPerformed
 
+    /**
+     * 
+     * @param evt 
+     */
+    private void jButtonCrearUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCrearUsuarioActionPerformed
+        // TODO add your handling code here:
+        if(jButtonCrearUsuario.getText()=="Crear"){
+            crearUsuario();
+        }
+        else{
+            aplicarModificacion();
+        }
+    }//GEN-LAST:event_jButtonCrearUsuarioActionPerformed
+
+    /**
+     * Muestra la ayuda de los formatos válidos de correos permitidos.
+     * @param evt 
+     */
+    private void jTextFieldCorreoElectronicoMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextFieldCorreoElectronicoMouseEntered
+        // TODO add your handling code here:
+        jTextFieldCorreoElectronico.setToolTipText("Los formatos permitidos: @gmail.com, @hotmail.com, @hotmail.es, @yahoo.com, @yahoo.es, @live.com, @live.es ");
+    }//GEN-LAST:event_jTextFieldCorreoElectronicoMouseEntered
+
+    /**
+     * Comprueba que todas las casillas han sido rellenadas.
+     * @return 
+     */
+    private boolean rellenado() {
+
+        //Variables
+        boolean rellenado = false;
+
+        //Proceso
+        if (!jTextFieldDni.getText().isEmpty()) {
+            if (!jTextFieldNombreUsuario.getText().isEmpty()) {
+                if (!jTextFieldCorreoElectronico.getText().isEmpty()) {
+                    if (jPasswordFieldContraseña.getPassword().length != 0) {
+                        rellenado = true;
+                    }
+                }
+            }
+        }
+
+        return rellenado;
+    }
+
+    /**
+     * Comprueba en la base de datos si existe el DNI del usuario 
+     * que quiere crear.
+     * @param dni
+     * @return 
+     */
+    private boolean comprobarExistencia(String dni) {
+
+        //Variables
+        boolean existe = false;
+        String query = "";
+
+        //Proceso
+        Conexio mysql = new Conexio();
+        Connection cn = mysql.conectar();
+
+        query = "SELECT Dni FROM usuarios WHERE Dni = '" + dni + "'";
+        try {
+            Statement st = cn.createStatement();
+            ResultSet rs = st.executeQuery(query);
+
+            while (rs.next()) {
+                if (rs.getString("Dni").contentEquals(dni)) {
+                    JOptionPane.showMessageDialog(null, "El DNI introducido ya existe.\n Conectese con su cuenta.");
+                    existe = true;
+                }
+            }
+        } 
+        catch (SQLException ex) {
+            ex.printStackTrace();
+        } 
+        finally {
+            if (cn != null) {
+                try {
+                    cn.close();
+                    cn = null;
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+
+        return existe;
+    }
+
+    /**
+     * Método que una vez comprobado todo los campos y valores introducidos,
+     * introduce el usuario en la tabla.
+     */
+    private void insertarUsuario(){
+        
+        //Variables
+        String query = "";
+        int n;
+        
+        //Proceso
+        Conexio mysql = new Conexio();
+        Connection cn = mysql.conectar();
+        
+        query = "INSERT INTO usuarios VALUES (? , ? , ? , ?)";
+        
+        try{
+            PreparedStatement pst = cn.prepareStatement(query);
+            pst.setString(1, dni);
+            pst.setString(2, usuario);
+            pst.setString(3, contrasenya);
+            pst.setString(4, correo);
+            
+            n = pst.executeUpdate();
+            if(n > 0){
+                JOptionPane.showMessageDialog(null, "Usuario creado satisfactoriamente.");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        finally {
+            if (cn != null) {
+                try {
+                    cn.close();
+                    cn = null;
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }
+    
+    /**
+     * Valida que el correo sea del formato válido.
+     * @param aux
+     * @return 
+     */
+    private boolean validarCorreo(String aux){
+        
+        //Variables
+        boolean validado=false;
+        String [] validos = {"@gmail.com" , "@hotmail.com" , "@hotmail.es" , "@yahoo.com" , "@yahoo.es" , "@live.com" , "@live.es"};
+        String arroba;
+        int i, contador=0, controlador=0;
+        
+        //Proceso
+        for(i=0; i<aux.length(); i++){
+            if(aux.charAt(i)=='@'){
+                contador=i;
+                controlador++;
+            }
+        }
+        if(contador!=0 && controlador==1){
+            arroba=aux.substring(contador, aux.length());
+            for(i=0;i<7; i++){
+                if(arroba.contentEquals(validos[i])){
+                    validado=true;
+                }
+            }
+        }
+        else{
+            if(controlador>1){
+                JOptionPane.showMessageDialog(null, "Solo puedes introducir una @.");
+            }
+            else{
+                JOptionPane.showMessageDialog(null, "No has introducido la @.");
+            }
+        }
+        return validado;
+    }
+    
+    /**
+     * Valida el formato del DNI. Primero la longitud, seguido de si tiene una 
+     * letra, está en el sitio correcto y si la letra es la que toca a ese
+     * número de DNI.
+     * @param dni
+     * @return 
+     */
+    private boolean validarDni(String dni){
+        
+        //Variables
+        boolean validado=false;
+        
+        //Proceso
+        ValidadorDNI vd = new ValidadorDNI();
+        if(vd.comprobarLongitud(dni)){
+            if(!vd.esNumero(dni)){
+                if(vd.esNumero(dni.substring(0, 8))){
+                    if(vd.validarNIF(dni)){
+                        validado=true;
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(null, "La letra introducida no coincide con un DNI valido.");
+                    }
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "Cuidado donde pongas la letra.");
+                }
+            }
+            else{
+                JOptionPane.showMessageDialog(null, "Has introducido solo numeros.");
+            }
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "La longitud del DNI supera o es inferior a 9. Comprueba el que has introducido.");
+        }
+        
+        return validado;
+    }
+    
+    /**
+     * Llama al método para añadir un usuario despues de comprobar que:
+     * - Los campos estén todos rellenados.
+     * - El DNI introducido tenga un formato válido.
+     * - La contraseña no sobrepase los 45 carácteres.
+     * - El nombre de usuario no sobrepase los 45 carácteres.
+     * - El correo tenga un formato correcto y pertenezca al rango de los 
+     *   válidos.
+     */
+    private void crearUsuario(){
+        if (rellenado()) {
+            dni = jTextFieldDni.getText();//Varchar(9)
+            if(validarDni(dni.toUpperCase())){
+                contrasenya = new String (jPasswordFieldContraseña.getPassword());//Varchar(45)
+                if(contrasenya.length()<=45){
+                    usuario = jTextFieldNombreUsuario.getText();//Varchar(45)
+                    if(usuario.length()<=45){
+                        correo = jTextFieldCorreoElectronico.getText();//Varchar(100)
+                        if(validarCorreo(correo)){
+                            if (!comprobarExistencia(dni)) {
+                            insertarUsuario();
+                            this.setVisible(false);
+                            }
+                        }
+                        else{
+                            JOptionPane.showMessageDialog(null, "El correo que has introducido no pertenece a los permitidos:\n@gmail.com, @hotmail.com, @hotmail.es, @yahoo.com, @yahoo.es, @live.com, @live.es.");
+                        }
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(null, "Has excedido los 45 carácteres permitidos.");
+                    }
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "Has excedido los 45 carácteres permitidos.");
+                }
+            }
+        } 
+        else {
+            JOptionPane.showMessageDialog(null, "Debes rellenar todos los campos.");
+        }
+    }
+    
+    /**
+     * Obtiene los datos del usuario que quiere modificar su cuenta y los coloca
+     * en los campos correspondientes.
+     * @param dni 
+     */
+    public void modificarUsuario(String dni){
+        
+        //Variables
+        String query = "";
+        
+        //Proceso
+        this.setTitle("Modificar Usuario");
+        this.jButtonCrearUsuario.setText("Modificar");
+        Conexio mysql = new Conexio();
+        Connection cn = mysql.conectar();
+        
+        query = "SELECT * FROM usuarios WHERE Dni='" + dni +"';" ;
+        this.dni=dni;
+        try {
+            Statement st = cn.createStatement();
+            ResultSet rs = st.executeQuery(query);
+
+            while (rs.next()) {
+                jTextFieldDni.setText(dni);
+                jTextFieldDni.setEditable(false);
+                jTextFieldNombreUsuario.setText(rs.getString("NombreUsuario"));
+                jPasswordFieldContraseña.setText(rs.getString("Password"));
+                jTextFieldCorreoElectronico.setText(rs.getString("Email"));
+            }
+        } 
+        catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        finally {
+            if (cn != null) {
+                try {
+                    cn.close();
+                    cn = null;
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }
+    
+    /**
+     * En el momento en que el usuario pulsa en modificar hace la sentencia
+     * update para modificar en la base de datos el usuario.
+     */
+    private void aplicarModificacion(){
+        
+        //Variables
+        String query = "";
+        int n;
+        
+        //Proceso
+        Conexio mysql = new Conexio();
+        Connection cn = mysql.conectar();
+        
+        query = "UPDATE usuarios SET NombreUsuario = ?, Password = ?, Email = ? WHERE Dni='" + dni + "';";
+        
+        try{
+            PreparedStatement pst = cn.prepareStatement(query);
+            pst.setString(1, jTextFieldNombreUsuario.getText());
+            pst.setString(2, new String(jPasswordFieldContraseña.getPassword()));
+            pst.setString(3, jTextFieldCorreoElectronico.getText());
+            
+            n = pst.executeUpdate();
+            if(n > 0){
+                JOptionPane.showMessageDialog(null, "Usuario modificado satisfactoriamente.");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        finally {
+            if (cn != null) {
+                try {
+                    cn.close();
+                    cn = null;
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }
+    
     /**
      * @param args the command line arguments
      */
