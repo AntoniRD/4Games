@@ -138,12 +138,12 @@ public class CrearCuenta extends javax.swing.JDialog {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonCerrarVentanaCrearCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCerrarVentanaCrearCuentaActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
-        new MenuPrincipal(new javax.swing.JFrame(), true).setVisible(true);
     }//GEN-LAST:event_jButtonCerrarVentanaCrearCuentaActionPerformed
 
     /**
@@ -470,6 +470,7 @@ public class CrearCuenta extends javax.swing.JDialog {
             if(n > 0){
                 JOptionPane.showMessageDialog(null, "Usuario modificado satisfactoriamente.");
             }
+            this.setVisible(false);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }

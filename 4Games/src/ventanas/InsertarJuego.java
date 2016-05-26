@@ -221,6 +221,7 @@ public class InsertarJuego extends javax.swing.JDialog {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jCheckBoxPS3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxPS3ActionPerformed
@@ -230,8 +231,6 @@ public class InsertarJuego extends javax.swing.JDialog {
     private void jButtonCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCerrarActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
-        MenuPrincipal mp = new MenuPrincipal(new javax.swing.JFrame(), true);
-        mp.setVisible(true);
     }//GEN-LAST:event_jButtonCerrarActionPerformed
 
     private void jButtonInsertarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonInsertarActionPerformed

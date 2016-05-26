@@ -49,7 +49,7 @@ public class ConsultarJuego extends javax.swing.JDialog {
         jButtonCerrar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableConsultarJuegos = new javax.swing.JTable();
-        jComboBoxPlataforma = new javax.swing.JComboBox<String>();
+        jComboBoxPlataforma = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -105,6 +105,7 @@ public class ConsultarJuego extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
+        jTableConsultarJuegos.getTableHeader().setReorderingAllowed(false);
         jTableConsultarJuegos.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTableConsultarJuegosMouseClicked(evt);
@@ -119,7 +120,7 @@ public class ConsultarJuego extends javax.swing.JDialog {
             jTableConsultarJuegos.getColumnModel().getColumn(4).setResizable(false);
         }
 
-        jComboBoxPlataforma.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "PS3", "PS4", "PS Vita", "PC", "MAC", "Web", "Wii", "Wii U", "3DS", "Android", "iPhone", "Xbox 360", "Xbox One" }));
+        jComboBoxPlataforma.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "PS3", "PS4", "PS Vita", "PC", "MAC", "Web", "Wii", "Wii U", "3DS", "Android", "iPhone", "Xbox 360", "Xbox One" }));
         jComboBoxPlataforma.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxPlataformaActionPerformed(evt);
@@ -177,6 +178,7 @@ public class ConsultarJuego extends javax.swing.JDialog {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jComboBoxPlataformaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxPlataformaActionPerformed
@@ -186,8 +188,6 @@ public class ConsultarJuego extends javax.swing.JDialog {
     private void jButtonCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCerrarActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
-        MenuPrincipal mp = new MenuPrincipal(new javax.swing.JFrame(), true);
-        mp.setVisible(true);
     }//GEN-LAST:event_jButtonCerrarActionPerformed
 
 

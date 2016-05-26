@@ -115,6 +115,7 @@ public class ComentariosJuego extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
+        jTableComentariosJuego.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(jTableComentariosJuego);
         if (jTableComentariosJuego.getColumnModel().getColumnCount() > 0) {
             jTableComentariosJuego.getColumnModel().getColumn(0).setResizable(false);
@@ -133,6 +134,7 @@ public class ComentariosJuego extends javax.swing.JDialog {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     /**

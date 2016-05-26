@@ -110,27 +110,26 @@ public class MenuPrincipal extends javax.swing.JDialog {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonInsertarJuegoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonInsertarJuegoActionPerformed
         // TODO add your handling code here:
         InsertarJuego ij = new InsertarJuego(new javax.swing.JFrame(), true);
         ij.setVisible(true);
-        this.setVisible(false);
     }//GEN-LAST:event_jButtonInsertarJuegoActionPerformed
 
     private void jButtonConsultarListaJuegosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConsultarListaJuegosActionPerformed
         // TODO add your handling code here:
         ConsultarJuego coj = new ConsultarJuego(new javax.swing.JFrame(), true);
         coj.setVisible(true);
-        this.setVisible(false);
     }//GEN-LAST:event_jButtonConsultarListaJuegosActionPerformed
 
     private void jButtonCalificarJuegosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCalificarJuegosActionPerformed
         // TODO add your handling code here:
         CalificarJuego caj = new CalificarJuego(new javax.swing.JFrame(), true);
+        caj.cogerDNI(dni);
         caj.setVisible(true);
-        this.setVisible(false);
     }//GEN-LAST:event_jButtonCalificarJuegosActionPerformed
 
     private void jButtonCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCerrarSesionActionPerformed
@@ -144,9 +143,8 @@ public class MenuPrincipal extends javax.swing.JDialog {
     private void jButtonModificarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarUsuarioActionPerformed
         // TODO add your handling code here:
         CrearCuenta cc = new CrearCuenta(new javax.swing.JFrame(), true);
-        cc.modificarUsuario(new IniciarSesion().dni);
+        cc.modificarUsuario(this.dni);
         cc.setVisible(true);
-        this.setVisible(false);
     }//GEN-LAST:event_jButtonModificarUsuarioActionPerformed
 
     public void setDniIniciado(String dni){

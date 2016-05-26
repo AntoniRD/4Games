@@ -6,10 +6,14 @@
 package ventanas;
 
 import clases.Conexio;
+import clases.ImportPlataformas;
 import java.awt.Color;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 /**
@@ -123,12 +127,14 @@ public class IniciarSesion extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonCrearCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCrearCuentaActionPerformed
         // TODO add your handling code here:
         CrearCuenta cc = new CrearCuenta(this, rootPaneCheckingEnabled);
         cc.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_jButtonCrearCuentaActionPerformed
 
     private void jButtonSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalirActionPerformed
@@ -162,6 +168,13 @@ public class IniciarSesion extends javax.swing.JFrame {
                         // todas las opciones disponibles.
                         MenuPrincipal mp = new MenuPrincipal(new javax.swing.JFrame(), true);
                         mp.setDniIniciado(dni);
+                        /*if(){
+                            importarCSV();
+                        }
+                        else{
+                            
+                        }*/
+                        this.setVisible(false);
                         mp.setVisible(true);
                     } else {
                         JOptionPane.showMessageDialog(null, "El usuario no esta registrado en la base de datos");
@@ -208,6 +221,43 @@ public class IniciarSesion extends javax.swing.JFrame {
         return pass;
     }
 
+    /**
+     * Metode que a nes moment que te identifiques amb un usuari correcte,
+     * se carregue el fitxer csv que es troba a nes paquet 'clases' ImportPlataformas
+     * lletgeix el fitxer a la clase i a n'aquest metode crides es metode de lletgir el fitxer
+     * i el guarda a un arraylist,
+     * recorreix l'array i crea s'insert de totes ses plataformes fins que acaba el fitxer.
+     * @param evt 
+     */
+    private void importarCSV(){
+        
+        //conexion
+        Conexio mysql = new Conexio(); 
+        Connection con = mysql.conectar();
+        
+        String iSQL = "";
+        
+        ImportPlataformas p = new ImportPlataformas();
+        
+        ArrayList <String> listaPlataformas = new ArrayList();
+        listaPlataformas = p.leer(); //introduce el contenido del fixero (que se encuentra en la clase importPlataformas) en un arraylist
+        
+        iSQL = "INSERT INTO Plataformas (NombrePlataforma) VALUES (?)"; //insert dentro de la tabla plataformas, el id es incrementativo.
+        
+        try {
+            PreparedStatement ps = con.prepareStatement(iSQL); 
+            for (int i = 0; i < listaPlataformas.size(); i++) { //recorreix l'array e inserta a la base de dades
+                ps.setString(1, listaPlataformas.get(i));//inserta
+                int n = ps.executeUpdate();
+                if (n > 0) {
+                    JOptionPane.showMessageDialog(null, "Inserció satisfactòria");//si funciona bien
+                }
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage()); //error
+        }
+    }
+    
     /**
      * @param args the command line arguments
      */

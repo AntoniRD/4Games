@@ -18,6 +18,9 @@ import javax.swing.JOptionPane;
  */
 public class CalificarJuego extends javax.swing.JDialog {
 
+    //Atributos
+    String dni;
+    
     /**
      * Creates new form CalificarJuego
      */
@@ -25,7 +28,7 @@ public class CalificarJuego extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         this.setTitle("Calificar Juego");
-        this.getContentPane().setBackground(new Color (243,245,246));
+        this.getContentPane().setBackground(new Color(243, 245, 246));
     }
 
     /**
@@ -38,11 +41,9 @@ public class CalificarJuego extends javax.swing.JDialog {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jTextFieldNombreJuego = new javax.swing.JTextField();
-        jTextFieldPropietario = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextPaneComentario = new javax.swing.JTextPane();
         jButtonGuardarJuego = new javax.swing.JButton();
@@ -52,8 +53,6 @@ public class CalificarJuego extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setText("Nombre de juego");
-
-        jLabel2.setText("Propietario");
 
         jLabel3.setText("Puntuar");
 
@@ -90,23 +89,18 @@ public class CalificarJuego extends javax.swing.JDialog {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel1))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addComponent(jTextFieldNombreJuego, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jTextFieldPropietario, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)))
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(jButtonCerrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jButtonGuardarJuego, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addComponent(jComboBoxPuntuar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(jLabel1)
+                                .addGap(18, 18, 18)
+                                .addComponent(jTextFieldNombreJuego, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addGap(18, 18, 18)
+                                .addComponent(jComboBoxPuntuar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jButtonCerrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButtonGuardarJuego, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap(27, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -118,54 +112,50 @@ public class CalificarJuego extends javax.swing.JDialog {
                     .addComponent(jTextFieldNombreJuego, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonGuardarJuego))
                 .addGap(21, 21, 21)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jTextFieldPropietario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButtonCerrar)))
-                .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonCerrar)
                     .addComponent(jLabel3)
                     .addComponent(jComboBoxPuntuar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(24, 24, 24)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(25, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCerrarActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
-        MenuPrincipal mp = new MenuPrincipal(new javax.swing.JFrame(), true);
-        mp.setVisible(true);
     }//GEN-LAST:event_jButtonCerrarActionPerformed
 
     /**
-     * metode que a nes moment de guarda, valida tots els camps e inserta el contingut de tots
-     * els camps a sa base de dades de la taula calificaciones.
-     * @param evt 
+     * metode que a nes moment de guarda, valida tots els camps e inserta el
+     * contingut de tots els camps a sa base de dades de la taula
+     * calificaciones.
+     *
+     * @param evt
      */
     private void jButtonGuardarJuegoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGuardarJuegoActionPerformed
         // TODO add your handling code here:
-        
+
         //Conexion a la base de datos
         Conexio mysql = new Conexio();
         Connection con = mysql.conectar();
-        
+
         //Variables
         String iSQL = ""; //insert
         String vNombreJuego = jTextFieldNombreJuego.getText(); //nombre del juego
         String puntuacionS = jComboBoxPuntuar.getSelectedItem().toString(); //contenido del checkbox en String
         int puntuacion = Integer.parseInt(puntuacionS); //contenido del checkbox en int
-        String descripcion = jTextPaneComentario.getText().toString(); //contenido de la descripcion del juego
-        
+        String descripcion = jTextPaneComentario.getText(); //contenido de la descripcion del juego
+
         //variable del dni, se tiene que modificar y recuperar el dni del usuario que esta logueado en este momento
-        String dn = "43190938c";
-        
+        //String dn = "43190938c";
+        //String dni = new MenuPrincipal(new javax.swing.JFrame(), true).getDniIniciado();
         iSQL = "INSERT INTO Calificaciones (Puntuacion, Comentario, Juegos_NombreJuego, Usuarios_Dni) VALUES (?, ?, ?, ?)";
 
         try {
@@ -173,20 +163,32 @@ public class CalificarJuego extends javax.swing.JDialog {
             ps.setInt(1, puntuacion);
             ps.setString(2, descripcion);
             ps.setString(3, vNombreJuego);
-            ps.setString(4, dn);
+            ps.setString(4, dni);
             //JOptionPane.showMessageDialog(null, "entro en el insert");
-            
+
             int n = ps.executeUpdate();
-            
+
             if (n > 0) {
                 JOptionPane.showMessageDialog(null, "Comentario añadido");
             }
-
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
+        } finally {
+            //Cierra la conexión con la base de datos.
+            if (con != null) {
+                try {
+                    con.close();
+                    con = null;
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Error al cerrar conexiones: " + e.getMessage());
+                }
+            }
         }
     }//GEN-LAST:event_jButtonGuardarJuegoActionPerformed
 
+    public void cogerDNI(String dni){
+        this.dni=dni;
+    }
     /**
      * @param args the command line arguments
      */
@@ -234,12 +236,10 @@ public class CalificarJuego extends javax.swing.JDialog {
     private javax.swing.JButton jButtonGuardarJuego;
     private javax.swing.JComboBox<String> jComboBoxPuntuar;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTextFieldNombreJuego;
-    private javax.swing.JTextField jTextFieldPropietario;
     private javax.swing.JTextPane jTextPaneComentario;
     // End of variables declaration//GEN-END:variables
 }
