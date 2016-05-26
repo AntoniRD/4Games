@@ -5,14 +5,20 @@
  */
 package ventanas;
 
+import clases.Conexio;
 import java.awt.Color;
+import java.sql.*;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Budha
  */
 public class ConsultarJuego extends javax.swing.JDialog {
-
+    
+    DefaultTableModel modelo;
+   
     /**
      * Creates new form ConsultarJuego
      */
@@ -21,6 +27,7 @@ public class ConsultarJuego extends javax.swing.JDialog {
         initComponents();
         this.setTitle("Consultar juego");
         this.getContentPane().setBackground(new Color (243,245,246));
+        
     }
 
     /**
@@ -42,8 +49,7 @@ public class ConsultarJuego extends javax.swing.JDialog {
         jButtonCerrar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableConsultarJuegos = new javax.swing.JTable();
-        jButtonVerComentarios = new javax.swing.JButton();
-        jComboBoxPlataforma = new javax.swing.JComboBox<>();
+        jComboBoxPlataforma = new javax.swing.JComboBox<String>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -53,9 +59,25 @@ public class ConsultarJuego extends javax.swing.JDialog {
 
         jLabel3.setText("Plataforma");
 
+        jTextFieldNombreJuego.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldNombreJuegoActionPerformed(evt);
+            }
+        });
+
         jButtonBuscar.setText("Buscar");
+        jButtonBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonBuscarActionPerformed(evt);
+            }
+        });
 
         jButtonMostrarTodo.setText("Mostrar todo");
+        jButtonMostrarTodo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonMostrarTodoActionPerformed(evt);
+            }
+        });
 
         jButtonCerrar.setText("Cerrar");
         jButtonCerrar.addActionListener(new java.awt.event.ActionListener() {
@@ -66,7 +88,10 @@ public class ConsultarJuego extends javax.swing.JDialog {
 
         jTableConsultarJuegos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
                 "Nombre", "Propietario", "Plataformas", "Multijugador", "Calificación"
@@ -80,6 +105,11 @@ public class ConsultarJuego extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
+        jTableConsultarJuegos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableConsultarJuegosMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTableConsultarJuegos);
         if (jTableConsultarJuegos.getColumnModel().getColumnCount() > 0) {
             jTableConsultarJuegos.getColumnModel().getColumn(0).setResizable(false);
@@ -89,14 +119,7 @@ public class ConsultarJuego extends javax.swing.JDialog {
             jTableConsultarJuegos.getColumnModel().getColumn(4).setResizable(false);
         }
 
-        jButtonVerComentarios.setText("Ver comentarios");
-        jButtonVerComentarios.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonVerComentariosActionPerformed(evt);
-            }
-        });
-
-        jComboBoxPlataforma.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "PS3", "PS4", "PS Vita", "PC", "MAC", "Web", "Wii", "Wii U", "3DS", "Android", "iPhone", "Xbox 360", "Xbox One" }));
+        jComboBoxPlataforma.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "PS3", "PS4", "PS Vita", "PC", "MAC", "Web", "Wii", "Wii U", "3DS", "Android", "iPhone", "Xbox 360", "Xbox One" }));
         jComboBoxPlataforma.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxPlataformaActionPerformed(evt);
@@ -123,9 +146,7 @@ public class ConsultarJuego extends javax.swing.JDialog {
                             .addComponent(jTextFieldNombreJuego, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
                             .addComponent(jTextFieldPropietario))
                         .addGap(30, 30, 30)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButtonMostrarTodo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButtonVerComentarios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jButtonMostrarTodo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jButtonBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
@@ -146,7 +167,6 @@ public class ConsultarJuego extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jTextFieldPropietario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonVerComentarios)
                     .addComponent(jButtonCerrar))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -170,11 +190,167 @@ public class ConsultarJuego extends javax.swing.JDialog {
         mp.setVisible(true);
     }//GEN-LAST:event_jButtonCerrarActionPerformed
 
-    private void jButtonVerComentariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVerComentariosActionPerformed
+
+    public void mostrarJuego() {
+
+        String pNombreJuego = jTextFieldNombreJuego.getText();
+        String pPropietario = jTextFieldPropietario.getText();
+        String plataforma = jComboBoxPlataforma.getSelectedItem().toString();
+        Conexio mysql = new Conexio();
+        Connection con = mysql.conectar();
+        String [] titulos = {"Nombre","Propietario","Plataformas","Multijugador","Calificación"};
+        String[] registro = new String[5];
+        modelo = new DefaultTableModel(null, titulos);
+        String sSQL = "";
+        
+        /**
+         * A la select empleam left join per agafar tots els valors tenguin o no tenguin correspondencia a un altra taula.
+         * Retorna tots els valors de la taula de la esquerra mes els valors que corresposen a les columnes,i en cas de que no
+         * corresposin, apareixerá null.
+         * Al primer join accedim a la taula usuarios_has_juegos per obtenir el nom del joc.
+         * Al segon left join accedim a la taula usuari per obtenir el nom del usuari que te algun joc asignat.
+         * Al tercer i el cuart obtenim el nom de la plataforma que te asignada el joc corresponent (NombreJuego).
+         * Al darrer join obtenem la calificació que te asignada el joc corresponent (NombreJuego).
+         * Al where tenim 1 = 1. Es un recurs de programació per poder validar si o si una clausula where i poder afegir AND.
+         * Ho emplei en aquest cas per poder concatenar les consultes nombrejuego,propietario i plataforma amb la sentencia sql.
+         * i per tenir les tres variables a condicions AND.
+         */
+        sSQL = "select j.NombreJuego, u.NombreUsuario,p.NombrePlataforma, j.Multijugador,c.Puntuacion " //dades que s'han de mostrar
+                + "from juegos j left join usuarios_has_juegos uj on j.NombreJuego = uj.Juegos_NombreJuego "
+                + "left join usuarios u on u.Dni = uj.usuarios_Dni "
+                + "left join juegos_has_plataformas jp on j.NombreJuego = jp.Juegos_NombreJuego "
+                + "left join plataformas p on p.IdPlataforma = jp.Plataformas_IdPlataforma "
+                + "left join calificaciones c on c.Juegos_NombreJuego = j.NombreJuego and c.Usuarios_Dni = u.Dni where 1=1";
+
+        /**
+         * Si el el camp nou no esta buit,continua la sentencia.
+         */
+        if (!pNombreJuego.isEmpty()) {
+            sSQL = sSQL + " and j.NombreJuego LIKE '%" + pNombreJuego + "%'";
+
+        }
+         /**
+         * Si el el camp propetario no esta buit,continua la sentencia.
+         */
+        if (!pPropietario.isEmpty()) {
+            sSQL = sSQL + " and u.NombreUsuario LIKE '%" + pPropietario + "%'";
+        }
+         /**
+         * Si el el camp plataforma esta seleccionat,continua la sentencia.
+         */
+        sSQL = sSQL + " and p.NombrePlataforma = '" + plataforma + "'";
+
+               
+        try {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(sSQL);
+            while (rs.next()) {
+
+                registro[0] = rs.getString("j.NombreJuego");
+                registro[1] = rs.getString("u.NombreUsuario");
+                registro[2] = rs.getString("p.NombrePlataforma");
+                registro[3] = rs.getString("j.Multijugador");
+                registro[4] = rs.getString("c.Puntuacion");
+                modelo.addRow(registro);
+            }
+
+            jTableConsultarJuegos.setModel(modelo);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+
+        }
+
+    }
+    /**
+     * Per poder realitzar la consulta de comentaris a la clase comentarioJuego, necessitava l'idenfitifcador, tot i que
+     * no el mostram a la taula.
+     * Alhora de mostrar la taula, no apareixera el parametre Id, però el podrem emprar per realitzar la consulta desde la altre
+     * clase.
+     * La sentencia es la mateixa sense els filtres de joc,plataforma i propietari, per a n'aquesta consulta volem mostrar
+     * tota la base de dades.
+     * 
+     */
+
+    
+    
+    
+    public void mostrarTodosJuegos(){
+        Conexio mysql = new Conexio();
+        Connection con = mysql.conectar();
+        String [] titulos = {"Nombre","Propietario","Plataformas","Multijugador","Calificación","Id"};
+        String [] registro = new String[6];
+         DefaultTableModel modelo2 = new DefaultTableModel(null,titulos);
+        
+        
+        String sSQL = "";
+        sSQL ="select j.NombreJuego, u.NombreUsuario,p.NombrePlataforma, j.Multijugador,c.Puntuacion,u.Dni "
+                + "from juegos j left join usuarios_has_juegos uj on j.NombreJuego = uj.Juegos_NombreJuego "
+                + "left join usuarios u on u.Dni = uj.usuarios_Dni "
+                + "left join juegos_has_plataformas jp on j.NombreJuego = jp.Juegos_NombreJuego "
+                + "left join plataformas p on p.IdPlataforma = jp.Plataformas_IdPlataforma "
+                + "left join calificaciones c on c.Juegos_NombreJuego = j.NombreJuego and c.Usuarios_Dni = u.Dni ";
+
+         try {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(sSQL);
+            while (rs.next()) {
+                
+                registro[0] = rs.getString("j.NombreJuego");
+                registro[1] = rs.getString("u.NombreUsuario");
+                registro[2] = rs.getString("p.NombrePlataforma");
+                registro[3] = rs.getString("j.Multijugador");
+                registro[4] = rs.getString("c.Puntuacion");
+                registro[5] = rs.getString("u.Dni");
+                modelo2.addRow(registro);
+            }
+            
+            jTableConsultarJuegos.setModel(modelo2);
+            jTableConsultarJuegos.getColumnModel().getColumn(5).setMinWidth(0);
+            jTableConsultarJuegos.getColumnModel().getColumn(5).setMaxWidth(0);
+
+            
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        
+        }
+ 
+    }
+    
+    
+    
+    
+    
+    private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
+        // TODO add your handling code here
+        
+        mostrarJuego();
+       
+    }//GEN-LAST:event_jButtonBuscarActionPerformed
+
+    private void jTextFieldNombreJuegoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldNombreJuegoActionPerformed
         // TODO add your handling code here:
-        ComentariosJuego comj = new ComentariosJuego(new javax.swing.JFrame(), true);
-        comj.setVisible(true);
-    }//GEN-LAST:event_jButtonVerComentariosActionPerformed
+    }//GEN-LAST:event_jTextFieldNombreJuegoActionPerformed
+    
+    
+  
+    private void jButtonMostrarTodoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMostrarTodoActionPerformed
+        // TODO add your handling code here:
+        mostrarTodosJuegos();
+    }//GEN-LAST:event_jButtonMostrarTodoActionPerformed
+
+    private void jTableConsultarJuegosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableConsultarJuegosMouseClicked
+        // TODO add your handling code here:
+        
+        if(evt.getClickCount()== 2){
+            int row = jTableConsultarJuegos.rowAtPoint(evt.getPoint());
+
+                String juego = (String) jTableConsultarJuegos.getValueAt(row, 0);
+                String dni = (String) jTableConsultarJuegos.getValueAt(row, 5);
+                ComentariosJuego cj = new ComentariosJuego(new javax.swing.JFrame(), true, juego, dni);
+                cj.setVisible(true);
+        }
+
+    }//GEN-LAST:event_jTableConsultarJuegosMouseClicked
 
     /**
      * @param args the command line arguments
@@ -222,7 +398,6 @@ public class ConsultarJuego extends javax.swing.JDialog {
     private javax.swing.JButton jButtonBuscar;
     private javax.swing.JButton jButtonCerrar;
     private javax.swing.JButton jButtonMostrarTodo;
-    private javax.swing.JButton jButtonVerComentarios;
     private javax.swing.JComboBox<String> jComboBoxPlataforma;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
