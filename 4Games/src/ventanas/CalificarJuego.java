@@ -5,7 +5,12 @@
  */
 package ventanas;
 
+import clases.Conexio;
 import java.awt.Color;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -57,6 +62,11 @@ public class CalificarJuego extends javax.swing.JDialog {
         jScrollPane1.setViewportView(jTextPaneComentario);
 
         jButtonGuardarJuego.setText("Guardar");
+        jButtonGuardarJuego.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonGuardarJuegoActionPerformed(evt);
+            }
+        });
 
         jButtonCerrar.setText("Cerrar");
         jButtonCerrar.addActionListener(new java.awt.event.ActionListener() {
@@ -133,6 +143,49 @@ public class CalificarJuego extends javax.swing.JDialog {
         MenuPrincipal mp = new MenuPrincipal(new javax.swing.JFrame(), true);
         mp.setVisible(true);
     }//GEN-LAST:event_jButtonCerrarActionPerformed
+
+    /**
+     * metode que a nes moment de guarda, valida tots els camps e inserta el contingut de tots
+     * els camps a sa base de dades de la taula calificaciones.
+     * @param evt 
+     */
+    private void jButtonGuardarJuegoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGuardarJuegoActionPerformed
+        // TODO add your handling code here:
+        
+        //Conexion a la base de datos
+        Conexio mysql = new Conexio();
+        Connection con = mysql.conectar();
+        
+        //Variables
+        String iSQL = ""; //insert
+        String vNombreJuego = jTextFieldNombreJuego.getText(); //nombre del juego
+        String puntuacionS = jComboBoxPuntuar.getSelectedItem().toString(); //contenido del checkbox en String
+        int puntuacion = Integer.parseInt(puntuacionS); //contenido del checkbox en int
+        String descripcion = jTextPaneComentario.getText().toString(); //contenido de la descripcion del juego
+        
+        //variable del dni, se tiene que modificar y recuperar el dni del usuario que esta logueado en este momento
+        String dn = "43190938c";
+        
+        iSQL = "INSERT INTO Calificaciones (Puntuacion, Comentario, Juegos_NombreJuego, Usuarios_Dni) VALUES (?, ?, ?, ?)";
+
+        try {
+            PreparedStatement ps = con.prepareStatement(iSQL);
+            ps.setInt(1, puntuacion);
+            ps.setString(2, descripcion);
+            ps.setString(3, vNombreJuego);
+            ps.setString(4, dn);
+            //JOptionPane.showMessageDialog(null, "entro en el insert");
+            
+            int n = ps.executeUpdate();
+            
+            if (n > 0) {
+                JOptionPane.showMessageDialog(null, "Comentario añadido");
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }//GEN-LAST:event_jButtonGuardarJuegoActionPerformed
 
     /**
      * @param args the command line arguments
