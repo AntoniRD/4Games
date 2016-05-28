@@ -20,12 +20,13 @@ import javax.swing.JOptionPane;
  * @author Budha
  */
 public class InsertarJuego extends javax.swing.JDialog {
-
+    private String dni;
     /**
      * Creates new form InsertarJuego
      */
-    public InsertarJuego(java.awt.Frame parent, boolean modal) {
+    public InsertarJuego(java.awt.Frame parent, boolean modal,String dni) {
         super(parent, modal);
+        this.dni = dni;
         initComponents();
         this.setTitle("Insertar Juego");
         this.getContentPane().setBackground(new Color(243, 245, 246));
@@ -232,16 +233,57 @@ public class InsertarJuego extends javax.swing.JDialog {
         // TODO add your handling code here:
         this.setVisible(false);
     }//GEN-LAST:event_jButtonCerrarActionPerformed
+    
+    private boolean comprobarExistenciaJuego(String juego){
+         boolean existe = false;
+        String query = "";
 
+        //Proceso
+        Conexio mysql = new Conexio();
+        Connection cn = mysql.conectar();
+
+        query = "SELECT NombreJuego FROM juegos WHERE NombreJuego = '" + juego + "'";
+        try {
+            Statement st = cn.createStatement();
+            ResultSet rs = st.executeQuery(query);
+
+            while (rs.next()) {
+                if (rs.getString("Dni").contentEquals(juego)) {
+                    JOptionPane.showMessageDialog(null, "El DNI introducido ya existe.\n Conectese con su cuenta.");
+                    existe = true;
+                }
+            }
+        } 
+        catch (SQLException ex) {
+            ex.printStackTrace();
+        } 
+        finally {
+            if (cn != null) {
+                try {
+                    cn.close();
+                    cn = null;
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+
+        return existe;
+    }
+        
+    
     private void jButtonInsertarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonInsertarActionPerformed
         Conexio mysql = new Conexio();
         Connection conn = mysql.conectar();
 
-        int n, m = -1; //Guardar cambios en base de datos
+        int n = -1;
+        int m = -1; //Guardar cambios en base de datos
+        int o = -1;
+        
         boolean ok; //Validar variables
         String queryJuegos; //Consulta de la tabla Juegos
         String queryJuegos_has_Plataformas; //Consulta de la tabla Juegos_has_Plataformas
-
+        String queryUsuarios_has_juegos; //insert relacion usuario-juegos
         String nombreJuego, descripcion;
         ArrayList<Integer> plataformas = new ArrayList<Integer>();
         boolean multijugador = false;
@@ -258,6 +300,7 @@ public class InsertarJuego extends javax.swing.JDialog {
         if (ok) {
             queryJuegos = "INSERT INTO Juegos VALUES (?, ?, ?)";
             queryJuegos_has_Plataformas = "INSERT INTO Juegos_has_Plataformas VALUES (?, ?)";
+            queryUsuarios_has_juegos = "INSERT INTO usuarios_has_juegos VALUES (?,?)";
             try {
                 //Guarda los valores obtenidos de los campos en la base de datos.
                 //Tabla JUEGOS
@@ -275,15 +318,25 @@ public class InsertarJuego extends javax.swing.JDialog {
                     psJuegosPlataformas.setInt(2, plataformas.get(i));
                     m = psJuegosPlataformas.executeUpdate();
                 }
+                
+                PreparedStatement psUsuarioJuegos = conn.prepareStatement(queryUsuarios_has_juegos);
+                psUsuarioJuegos.setString(1, this.dni);
+                psUsuarioJuegos.setString(2, nombreJuego);
+                
+                o = psUsuarioJuegos.executeUpdate();
 
                 // 1:OK, -1:ERROR
-                if (n > 0 && m > 0) {
+                if (n > 0 && m > 0 && o > 0) {
                     JOptionPane.showMessageDialog(null, "Juego insertado satisfactoriamente!");
                 }
-
+                
+                
             } catch (SQLException sqlEx) {
                 if (sqlEx.getErrorCode() == 1062) {
                     JOptionPane.showMessageDialog(null, "El nombre del juego ya existe!");
+                } // y si es una excepción distinta a 1062?
+                else{
+                    JOptionPane.showMessageDialog(null, "Error insertando el juego!");
                 }
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, "Error inesperado: " + ex.getMessage());
@@ -392,12 +445,10 @@ public class InsertarJuego extends javax.swing.JDialog {
     /**
      * @param args the command line arguments
      */
+    /**
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
+       
+       
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -416,10 +467,10 @@ public class InsertarJuego extends javax.swing.JDialog {
         }
         //</editor-fold>
 
-        /* Create and display the dialog */
+       
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                InsertarJuego dialog = new InsertarJuego(new javax.swing.JFrame(), true);
+                InsertarJuego dialog = new InsertarJuego(new javax.swing.JFrame(), true,);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -429,7 +480,9 @@ public class InsertarJuego extends javax.swing.JDialog {
                 dialog.setVisible(true);
             }
         });
+        
     }
+*/
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCerrar;

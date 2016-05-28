@@ -168,12 +168,13 @@ public class IniciarSesion extends javax.swing.JFrame {
                         // todas las opciones disponibles.
                         MenuPrincipal mp = new MenuPrincipal(new javax.swing.JFrame(), true);
                         mp.setDniIniciado(dni);
-                        /*if(){
-                            importarCSV();
-                        }
-                        else{
+                        //if(){
+                       // esto importa las platafomas,luego hay que quitarlo   
+                       // importarCSV();
+                        //}
+                        //else{
                             
-                        }*/
+                        //}
                         this.setVisible(false);
                         mp.setVisible(true);
                     } else {

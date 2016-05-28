@@ -115,7 +115,7 @@ public class MenuPrincipal extends javax.swing.JDialog {
 
     private void jButtonInsertarJuegoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonInsertarJuegoActionPerformed
         // TODO add your handling code here:
-        InsertarJuego ij = new InsertarJuego(new javax.swing.JFrame(), true);
+        InsertarJuego ij = new InsertarJuego(new javax.swing.JFrame(), true,dni);
         ij.setVisible(true);
     }//GEN-LAST:event_jButtonInsertarJuegoActionPerformed
 

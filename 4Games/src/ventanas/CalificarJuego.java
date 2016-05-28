@@ -27,6 +27,7 @@ public class CalificarJuego extends javax.swing.JDialog {
     public CalificarJuego(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        //crearCombo();
         this.setTitle("Calificar Juego");
         this.getContentPane().setBackground(new Color(243, 245, 246));
     }
@@ -131,7 +132,21 @@ public class CalificarJuego extends javax.swing.JDialog {
         // TODO add your handling code here:
         this.setVisible(false);
     }//GEN-LAST:event_jButtonCerrarActionPerformed
-
+    
+    
+    /**
+    private void comprobarCalificacion(){
+        
+        int numeroPuntuaciones;
+        String NombreJuego;
+        String plataforma;
+        String sSQL = "";
+        sSQL = "Select Puntuacion from calificaciones where NombreJuego ="; 
+        
+        if(NombreJeugo == NombreJuego && plataforma == plataforma)
+            puntuacion = puntuacion + valor / numeroPuntuaciones;
+    }
+    
     /**
      * metode que a nes moment de guarda, valida tots els camps e inserta el
      * contingut de tots els camps a sa base de dades de la taula
@@ -148,11 +163,11 @@ public class CalificarJuego extends javax.swing.JDialog {
 
         //Variables
         String iSQL = ""; //insert
-        String vNombreJuego = jTextFieldNombreJuego.getText(); //nombre del juego
+        String vNombreJuego = jTextFieldNombreJuego.getText(); //nombre del juego jComboBoxJuegos.getSelectedItem().toString();
         String puntuacionS = jComboBoxPuntuar.getSelectedItem().toString(); //contenido del checkbox en String
         int puntuacion = Integer.parseInt(puntuacionS); //contenido del checkbox en int
         String descripcion = jTextPaneComentario.getText(); //contenido de la descripcion del juego
-
+        //String combo = ;
         //variable del dni, se tiene que modificar y recuperar el dni del usuario que esta logueado en este momento
         //String dn = "43190938c";
         //String dni = new MenuPrincipal(new javax.swing.JFrame(), true).getDniIniciado();
@@ -171,6 +186,7 @@ public class CalificarJuego extends javax.swing.JDialog {
             if (n > 0) {
                 JOptionPane.showMessageDialog(null, "Comentario añadido");
             }
+            //
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
         } finally {

@@ -144,6 +144,7 @@ public class CrearCuenta extends javax.swing.JDialog {
     private void jButtonCerrarVentanaCrearCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCerrarVentanaCrearCuentaActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
+        
     }//GEN-LAST:event_jButtonCerrarVentanaCrearCuentaActionPerformed
 
     /**
@@ -378,6 +379,8 @@ public class CrearCuenta extends javax.swing.JDialog {
                         if(validarCorreo(correo)){
                             if (!comprobarExistencia(dni)) {
                             insertarUsuario();
+                            IniciarSesion is = new IniciarSesion();
+                            is.setVisible(true);
                             this.setVisible(false);
                             }
                         }

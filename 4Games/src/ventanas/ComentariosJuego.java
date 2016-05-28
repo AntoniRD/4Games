@@ -22,7 +22,7 @@ public class ComentariosJuego extends javax.swing.JDialog {
 
     DefaultTableModel modelo;
     private String NombreJuego;
-    private String Dni;
+    
     /**
      * Creates new form ComentariosJuego
      */
@@ -35,10 +35,10 @@ public class ComentariosJuego extends javax.swing.JDialog {
      * @param NombreJuego
      * @param Dni 
      */
-    public ComentariosJuego(java.awt.Frame parent, boolean modal,String NombreJuego,String Dni) { 
+    public ComentariosJuego(java.awt.Frame parent, boolean modal,String NombreJuego) { 
         super(parent, modal);
         this.NombreJuego = NombreJuego;
-        this.Dni = Dni;
+        
         initComponents();
         this.setTitle("Comentarios juegos");
         this.getContentPane().setBackground(new Color (243,245,246));
@@ -52,15 +52,15 @@ public class ComentariosJuego extends javax.swing.JDialog {
     private void verComentarios(){
         Conexio mysql = new Conexio();
         Connection con = mysql.conectar();
-        String [] titulos = {"Nombre","Comentarios"};
-        String [] registro = new String[2];
+        String [] titulos = {"Usuario","Puntuacion","Comentarios"};
+        String [] registro = new String[3];
          DefaultTableModel modelo = new DefaultTableModel(null,titulos);
         String sSQL = "";
 
-        sSQL = "Select u.NombreUsuario,c.Comentario "
-                +"from usuarios u,calificaciones c "
-                +"where u.Dni = '"+Dni+"'"
-                +"and c.Juegos_NombreJuego = '"+NombreJuego+"'";
+        sSQL = "Select u.NombreUsuario,c.Puntuacion,c.Comentario "
+                +"from usuarios u inner join calificaciones c "
+                + "on u.Dni = c.Usuarios_Dni "
+                +"where c.Juegos_NombreJuego = '"+NombreJuego+"'";
                
                 
         try {
@@ -69,7 +69,8 @@ public class ComentariosJuego extends javax.swing.JDialog {
             while (rs.next()) {
                 
                 registro[0] = rs.getString("u.NombreUsuario");
-                registro[1] = rs.getString("c.Comentario");
+                registro[1] = rs.getString("c.Puntuacion");
+                registro[2] = rs.getString("c.Comentario");
                 modelo.addRow(registro);
                 }
             
