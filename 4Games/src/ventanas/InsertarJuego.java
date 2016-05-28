@@ -72,19 +72,9 @@ public class InsertarJuego extends javax.swing.JDialog {
 
         jLabel3.setText("Plataformas");
 
-        jTextPaneDescripcion.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                jTextPaneDescripcionKeyPressed(evt);
-            }
-        });
         jScrollPane1.setViewportView(jTextPaneDescripcion);
 
         jCheckBoxPS3.setText("PS3");
-        jCheckBoxPS3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBoxPS3ActionPerformed(evt);
-            }
-        });
 
         jCheckBoxPS4.setText("PS4");
 
@@ -225,10 +215,6 @@ public class InsertarJuego extends javax.swing.JDialog {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jCheckBoxPS3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxPS3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBoxPS3ActionPerformed
-
     private void jButtonCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCerrarActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
@@ -328,13 +314,14 @@ public class InsertarJuego extends javax.swing.JDialog {
                 // 1:OK, -1:ERROR
                 if (n > 0 && m > 0 && o > 0) {
                     JOptionPane.showMessageDialog(null, "Juego insertado satisfactoriamente!");
+                    vaciarCampos();
                 }
                 
                 
             } catch (SQLException sqlEx) {
                 if (sqlEx.getErrorCode() == 1062) {
                     JOptionPane.showMessageDialog(null, "El nombre del juego ya existe!");
-                } // y si es una excepción distinta a 1062?
+                }
                 else{
                     JOptionPane.showMessageDialog(null, "Error insertando el juego!");
                 }
@@ -354,11 +341,24 @@ public class InsertarJuego extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_jButtonInsertarActionPerformed
 
-    private void jTextPaneDescripcionKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextPaneDescripcionKeyPressed
-        
-
-    }//GEN-LAST:event_jTextPaneDescripcionKeyPressed
-
+    private void vaciarCampos() {
+        jTextFieldNombreJuego.setText("");
+        jTextPaneDescripcion.setText("");
+        jCheckBoxPS4.setSelected(false);
+        jCheckBoxPSvita.setSelected(false);
+        jCheckBoxPC.setSelected(false);
+        jCheckBoxMAC.setSelected(false);
+        jCheckBoxWeb.setSelected(false);
+        jCheckBoxWii.setSelected(false);
+        jCheckBoxWiiU.setSelected(false);
+        jCheckBox3DS.setSelected(false);
+        jCheckBoxAndroid.setSelected(false);
+        jCheckBoxIphone.setSelected(false);
+        jCheckBoxXBox360.setSelected(false);
+        jCheckBoxXBoxOne.setSelected(false);
+        jCheckBoxMultijugador.setSelected(false);
+    }
+    
     private boolean validarVariables(String nombreJuego, String descripcion, ArrayList<Integer> plataformas) {
         boolean resultado = true;
 
