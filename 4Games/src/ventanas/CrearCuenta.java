@@ -31,6 +31,7 @@ public class CrearCuenta extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         this.setTitle("Crear Usuario");
+        jButtonEliminar.setVisible(false);
         this.getContentPane().setBackground(new Color(243, 245, 246));
     }
 
@@ -53,6 +54,7 @@ public class CrearCuenta extends javax.swing.JDialog {
         jButtonCrearUsuario = new javax.swing.JButton();
         jButtonCerrarVentanaCrearCuenta = new javax.swing.JButton();
         jPasswordFieldContraseña = new javax.swing.JPasswordField();
+        jButtonEliminar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -84,6 +86,13 @@ public class CrearCuenta extends javax.swing.JDialog {
             }
         });
 
+        jButtonEliminar.setText("Eliminar");
+        jButtonEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonEliminarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -93,7 +102,9 @@ public class CrearCuenta extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jButtonCrearUsuario)
-                        .addGap(70, 70, 70)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonEliminar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonCerrarVentanaCrearCuenta)
                         .addGap(55, 55, 55))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -133,7 +144,8 @@ public class CrearCuenta extends javax.swing.JDialog {
                 .addGap(45, 45, 45)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonCrearUsuario)
-                    .addComponent(jButtonCerrarVentanaCrearCuenta))
+                    .addComponent(jButtonCerrarVentanaCrearCuenta)
+                    .addComponent(jButtonEliminar))
                 .addContainerGap(34, Short.MAX_VALUE))
         );
 
@@ -144,35 +156,86 @@ public class CrearCuenta extends javax.swing.JDialog {
     private void jButtonCerrarVentanaCrearCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCerrarVentanaCrearCuentaActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
-        
+
     }//GEN-LAST:event_jButtonCerrarVentanaCrearCuentaActionPerformed
 
     /**
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void jButtonCrearUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCrearUsuarioActionPerformed
         // TODO add your handling code here:
-        if(jButtonCrearUsuario.getText()=="Crear"){
+        if (jButtonCrearUsuario.getText() == "Crear") {
             crearUsuario();
-        }
-        else{
+        } else {
             aplicarModificacion();
         }
     }//GEN-LAST:event_jButtonCrearUsuarioActionPerformed
 
     /**
      * Muestra la ayuda de los formatos válidos de correos permitidos.
-     * @param evt 
+     *
+     * @param evt
      */
     private void jTextFieldCorreoElectronicoMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextFieldCorreoElectronicoMouseEntered
         // TODO add your handling code here:
         jTextFieldCorreoElectronico.setToolTipText("Los formatos permitidos: @gmail.com, @hotmail.com, @hotmail.es, @yahoo.com, @yahoo.es, @live.com, @live.es ");
     }//GEN-LAST:event_jTextFieldCorreoElectronicoMouseEntered
 
+    private void jButtonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEliminarActionPerformed
+
+        //Variables
+        String query = "";
+        int n, m, o;
+
+        //Proceso
+        Conexio mysql = new Conexio();
+        Connection cn = mysql.conectar();
+
+        query = "DELETE FROM usuarios_has_juegos WHERE Usuarios_Dni = '" + dni + "'";
+
+        try {
+            PreparedStatement pst = cn.prepareStatement(query);
+            n = pst.executeUpdate();
+            System.out.println("usuarios_has_juegos");
+            if (n > 0) {
+                query = "DELETE FROM calificaciones WHERE Usuarios_Dni = '" + dni + "'";
+                PreparedStatement pst2 = cn.prepareStatement(query);
+                System.out.println("calificaciones");
+                m = pst2.executeUpdate();
+                if (m > 0) {
+                    query = "DELETE FROM usuarios WHERE Dni = '" + dni + "'";
+                    PreparedStatement pst3 = cn.prepareStatement(query);
+                    System.out.println("usuarios");
+                    o = pst3.executeUpdate();
+                    if (o > 0) {
+                        JOptionPane.showMessageDialog(null, "Usuario eliminado satisfactoriamente.");
+                        MenuPrincipal mp = new MenuPrincipal(new javax.swing.JFrame(), true);
+                        mp.setVisible(false);
+                        this.setVisible(false);
+                        IniciarSesion is = new IniciarSesion();
+                        is.setVisible(true);
+                    }
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            if (cn != null) {
+                try {
+                    cn.close();
+                    cn = null;
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }//GEN-LAST:event_jButtonEliminarActionPerformed
+
     /**
      * Comprueba que todas las casillas han sido rellenadas.
-     * @return 
+     *
+     * @return
      */
     private boolean rellenado() {
 
@@ -194,10 +257,11 @@ public class CrearCuenta extends javax.swing.JDialog {
     }
 
     /**
-     * Comprueba en la base de datos si existe el DNI del usuario 
-     * que quiere crear.
+     * Comprueba en la base de datos si existe el DNI del usuario que quiere
+     * crear.
+     *
      * @param dni
-     * @return 
+     * @return
      */
     private boolean comprobarExistencia(String dni) {
 
@@ -220,11 +284,9 @@ public class CrearCuenta extends javax.swing.JDialog {
                     existe = true;
                 }
             }
-        } 
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             ex.printStackTrace();
-        } 
-        finally {
+        } finally {
             if (cn != null) {
                 try {
                     cn.close();
@@ -242,33 +304,32 @@ public class CrearCuenta extends javax.swing.JDialog {
      * Método que una vez comprobado todo los campos y valores introducidos,
      * introduce el usuario en la tabla.
      */
-    private void insertarUsuario(){
-        
+    private void insertarUsuario() {
+
         //Variables
         String query = "";
         int n;
-        
+
         //Proceso
         Conexio mysql = new Conexio();
         Connection cn = mysql.conectar();
-        
+
         query = "INSERT INTO usuarios VALUES (? , ? , ? , ?)";
-        
-        try{
+
+        try {
             PreparedStatement pst = cn.prepareStatement(query);
             pst.setString(1, dni);
             pst.setString(2, usuario);
             pst.setString(3, contrasenya);
             pst.setString(4, correo);
-            
+
             n = pst.executeUpdate();
-            if(n > 0){
+            if (n > 0) {
                 JOptionPane.showMessageDialog(null, "Usuario creado satisfactoriamente.");
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
-        }
-        finally {
+        } finally {
             if (cn != null) {
                 try {
                     cn.close();
@@ -279,147 +340,139 @@ public class CrearCuenta extends javax.swing.JDialog {
             }
         }
     }
-    
+
     /**
      * Valida que el correo sea del formato válido.
+     *
      * @param aux
-     * @return 
+     * @return
      */
-    private boolean validarCorreo(String aux){
-        
+    private boolean validarCorreo(String aux) {
+
         //Variables
-        boolean validado=false;
-        String [] validos = {"@gmail.com" , "@hotmail.com" , "@hotmail.es" , "@yahoo.com" , "@yahoo.es" , "@live.com" , "@live.es"};
+        boolean validado = false;
+        String[] validos = {"@gmail.com", "@hotmail.com", "@hotmail.es", "@yahoo.com", "@yahoo.es", "@live.com", "@live.es"};
         String arroba;
-        int i, contador=0, controlador=0;
-        
+        int i, contador = 0, controlador = 0;
+
         //Proceso
-        for(i=0; i<aux.length(); i++){
-            if(aux.charAt(i)=='@'){
-                contador=i;
+        for (i = 0; i < aux.length(); i++) {
+            if (aux.charAt(i) == '@') {
+                contador = i;
                 controlador++;
             }
         }
-        if(contador!=0 && controlador==1){
-            arroba=aux.substring(contador, aux.length());
-            for(i=0;i<7; i++){
-                if(arroba.contentEquals(validos[i])){
-                    validado=true;
+        if (contador != 0 && controlador == 1) {
+            arroba = aux.substring(contador, aux.length());
+            for (i = 0; i < 7; i++) {
+                if (arroba.contentEquals(validos[i])) {
+                    validado = true;
                 }
             }
-        }
-        else{
-            if(controlador>1){
+        } else {
+            if (controlador > 1) {
                 JOptionPane.showMessageDialog(null, "Solo puedes introducir una @.");
-            }
-            else{
+            } else {
                 JOptionPane.showMessageDialog(null, "No has introducido la @.");
             }
         }
         return validado;
     }
-    
+
     /**
-     * Valida el formato del DNI. Primero la longitud, seguido de si tiene una 
+     * Valida el formato del DNI. Primero la longitud, seguido de si tiene una
      * letra, está en el sitio correcto y si la letra es la que toca a ese
      * número de DNI.
+     *
      * @param dni
-     * @return 
+     * @return
      */
-    private boolean validarDni(String dni){
-        
+    private boolean validarDni(String dni) {
+
         //Variables
-        boolean validado=false;
-        
+        boolean validado = false;
+
         //Proceso
         ValidadorDNI vd = new ValidadorDNI();
-        if(vd.comprobarLongitud(dni)){
-            if(!vd.esNumero(dni)){
-                if(vd.esNumero(dni.substring(0, 8))){
-                    if(vd.validarNIF(dni)){
-                        validado=true;
-                    }
-                    else{
+        if (vd.comprobarLongitud(dni)) {
+            if (!vd.esNumero(dni)) {
+                if (vd.esNumero(dni.substring(0, 8))) {
+                    if (vd.validarNIF(dni)) {
+                        validado = true;
+                    } else {
                         JOptionPane.showMessageDialog(null, "La letra introducida no coincide con un DNI valido.");
                     }
-                }
-                else{
+                } else {
                     JOptionPane.showMessageDialog(null, "Cuidado donde pongas la letra.");
                 }
-            }
-            else{
+            } else {
                 JOptionPane.showMessageDialog(null, "Has introducido solo numeros.");
             }
-        }
-        else{
+        } else {
             JOptionPane.showMessageDialog(null, "La longitud del DNI supera o es inferior a 9. Comprueba el que has introducido.");
         }
-        
+
         return validado;
     }
-    
+
     /**
-     * Llama al método para añadir un usuario despues de comprobar que:
-     * - Los campos estén todos rellenados.
-     * - El DNI introducido tenga un formato válido.
-     * - La contraseña no sobrepase los 45 carácteres.
-     * - El nombre de usuario no sobrepase los 45 carácteres.
-     * - El correo tenga un formato correcto y pertenezca al rango de los 
-     *   válidos.
+     * Llama al método para añadir un usuario despues de comprobar que: - Los
+     * campos estén todos rellenados. - El DNI introducido tenga un formato
+     * válido. - La contraseña no sobrepase los 45 carácteres. - El nombre de
+     * usuario no sobrepase los 45 carácteres. - El correo tenga un formato
+     * correcto y pertenezca al rango de los válidos.
      */
-    private void crearUsuario(){
+    private void crearUsuario() {
         if (rellenado()) {
             dni = jTextFieldDni.getText();//Varchar(9)
-            if(validarDni(dni.toUpperCase())){
-                contrasenya = new String (jPasswordFieldContraseña.getPassword());//Varchar(45)
-                if(contrasenya.length()<=45){
+            if (validarDni(dni.toUpperCase())) {
+                contrasenya = new String(jPasswordFieldContraseña.getPassword());//Varchar(45)
+                if (contrasenya.length() <= 45) {
                     usuario = jTextFieldNombreUsuario.getText();//Varchar(45)
-                    if(usuario.length()<=45){
+                    if (usuario.length() <= 45) {
                         correo = jTextFieldCorreoElectronico.getText();//Varchar(100)
-                        if(validarCorreo(correo)){
+                        if (validarCorreo(correo)) {
                             if (!comprobarExistencia(dni)) {
-                            insertarUsuario();
-                            IniciarSesion is = new IniciarSesion();
-                            is.setVisible(true);
-                            this.setVisible(false);
+                                insertarUsuario();
+                                IniciarSesion is = new IniciarSesion();
+                                is.setVisible(true);
+                                this.setVisible(false);
                             }
-                        }
-                        else{
+                        } else {
                             JOptionPane.showMessageDialog(null, "El correo que has introducido no pertenece a los permitidos:\n@gmail.com, @hotmail.com, @hotmail.es, @yahoo.com, @yahoo.es, @live.com, @live.es.");
                         }
-                    }
-                    else{
+                    } else {
                         JOptionPane.showMessageDialog(null, "Has excedido los 45 carácteres permitidos.");
                     }
-                }
-                else{
+                } else {
                     JOptionPane.showMessageDialog(null, "Has excedido los 45 carácteres permitidos.");
                 }
             }
-        } 
-        else {
+        } else {
             JOptionPane.showMessageDialog(null, "Debes rellenar todos los campos.");
         }
     }
-    
+
     /**
      * Obtiene los datos del usuario que quiere modificar su cuenta y los coloca
      * en los campos correspondientes.
-     * @param dni 
+     *
+     * @param dni
      */
-    public void modificarUsuario(String dni){
-        
+    public void modificarUsuario(String dni) {
+
         //Variables
         String query = "";
-        
+
         //Proceso
         this.setTitle("Modificar Usuario");
         this.jButtonCrearUsuario.setText("Modificar");
+        this.jButtonEliminar.setVisible(true);
         Conexio mysql = new Conexio();
         Connection cn = mysql.conectar();
-        
-        query = "SELECT * FROM usuarios WHERE Dni='" + dni +"';" ;
-        this.dni=dni;
+
+        query = "SELECT * FROM usuarios WHERE Dni='" + dni + "';";
+        this.dni = dni;
         try {
             Statement st = cn.createStatement();
             ResultSet rs = st.executeQuery(query);
@@ -431,11 +484,9 @@ public class CrearCuenta extends javax.swing.JDialog {
                 jPasswordFieldContraseña.setText(rs.getString("Password"));
                 jTextFieldCorreoElectronico.setText(rs.getString("Email"));
             }
-        } 
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             ex.printStackTrace();
-        }
-        finally {
+        } finally {
             if (cn != null) {
                 try {
                     cn.close();
@@ -446,38 +497,37 @@ public class CrearCuenta extends javax.swing.JDialog {
             }
         }
     }
-    
+
     /**
      * En el momento en que el usuario pulsa en modificar hace la sentencia
      * update para modificar en la base de datos el usuario.
      */
-    private void aplicarModificacion(){
-        
+    private void aplicarModificacion() {
+
         //Variables
         String query = "";
         int n;
-        
+
         //Proceso
         Conexio mysql = new Conexio();
         Connection cn = mysql.conectar();
-        
+
         query = "UPDATE usuarios SET NombreUsuario = ?, Password = ?, Email = ? WHERE Dni='" + dni + "';";
-        
-        try{
+
+        try {
             PreparedStatement pst = cn.prepareStatement(query);
             pst.setString(1, jTextFieldNombreUsuario.getText());
             pst.setString(2, new String(jPasswordFieldContraseña.getPassword()));
             pst.setString(3, jTextFieldCorreoElectronico.getText());
-            
+
             n = pst.executeUpdate();
-            if(n > 0){
+            if (n > 0) {
                 JOptionPane.showMessageDialog(null, "Usuario modificado satisfactoriamente.");
             }
             this.setVisible(false);
         } catch (SQLException ex) {
             ex.printStackTrace();
-        }
-        finally {
+        } finally {
             if (cn != null) {
                 try {
                     cn.close();
@@ -488,7 +538,7 @@ public class CrearCuenta extends javax.swing.JDialog {
             }
         }
     }
-    
+
     /**
      * @param args the command line arguments
      */
@@ -534,6 +584,7 @@ public class CrearCuenta extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCerrarVentanaCrearCuenta;
     private javax.swing.JButton jButtonCrearUsuario;
+    private javax.swing.JButton jButtonEliminar;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
