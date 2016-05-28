@@ -115,23 +115,17 @@ public class VerJuego extends javax.swing.JDialog {
 
         jLabel2 = new javax.swing.JLabel();
         labelMultijugador = new javax.swing.JLabel();
-        jButtonVerPropietarios = new javax.swing.JButton();
         jButtonVerCalificaciones = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTablePlataformas = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(400, 300));
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        setMaximumSize(new java.awt.Dimension(0, 0));
+        setPreferredSize(new java.awt.Dimension(215, 250));
 
         jLabel2.setText("Multijugador");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 40, 70, 20));
 
-        labelMultijugador.setText("jLabel4");
-        getContentPane().add(labelMultijugador, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 40, 50, 20));
-
-        jButtonVerPropietarios.setText("Ver propietarios");
-        getContentPane().add(jButtonVerPropietarios, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 60, 120, -1));
+        labelMultijugador.setText("boolea");
 
         jButtonVerCalificaciones.setText("Ver Calificaciones");
         jButtonVerCalificaciones.addActionListener(new java.awt.event.ActionListener() {
@@ -139,19 +133,46 @@ public class VerJuego extends javax.swing.JDialog {
                 jButtonVerCalificacionesActionPerformed(evt);
             }
         });
-        getContentPane().add(jButtonVerCalificaciones, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 20, 120, -1));
 
         jTablePlataformas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Plataforma"
+                "Título 1"
             }
         ));
         jScrollPane1.setViewportView(jTablePlataformas);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, 340, 120));
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(labelMultijugador, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButtonVerCalificaciones, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(20, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelMultijugador, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButtonVerCalificaciones)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -170,7 +191,6 @@ public class VerJuego extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonVerCalificaciones;
-    private javax.swing.JButton jButtonVerPropietarios;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTablePlataformas;

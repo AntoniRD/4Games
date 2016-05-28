@@ -34,13 +34,16 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="jButtonConsultarListaJuegos" max="32767" attributes="0"/>
-                  <Component id="jButtonInsertarJuego" alignment="0" max="32767" attributes="0"/>
-                  <Component id="jButtonCalificarJuegos" alignment="0" max="32767" attributes="0"/>
                   <Component id="jButtonCerrarSesion" alignment="0" max="32767" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Component id="jButtonInsertarJuego" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jButtonModificarUsuario" min="-2" pref="32" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
+                  </Group>
+                  <Component id="jButtonConsultarListaJuegos" alignment="0" max="32767" attributes="0"/>
+                  <Component id="jButtonCalificarJuegos" alignment="0" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="jButtonModificarUsuario" min="-2" pref="32" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -98,6 +101,11 @@
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="jButtonModificarUsuario">
+      <Properties>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/imagenes/roda.png"/>
+        </Property>
+      </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonModificarUsuarioActionPerformed"/>
       </Events>
