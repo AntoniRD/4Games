@@ -13,3 +13,5 @@ INSERT INTO calificaciones VALUES();
 ALTER TABLE calificaciones
 ADD CHECK ((puntuacion < 6) AND (puntuacion > 0));
 
+ALTER TABLE `calificaciones` ADD UNIQUE `unique_index`(`Juegos_NombreJuegos`, `Usuarios_Dni`);
+
