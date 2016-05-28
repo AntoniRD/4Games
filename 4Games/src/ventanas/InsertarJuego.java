@@ -235,7 +235,7 @@ public class InsertarJuego extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonCerrarActionPerformed
     
     private boolean comprobarExistenciaJuego(String juego){
-         boolean existe = false;
+        boolean existe = false;
         String query = "";
 
         //Proceso

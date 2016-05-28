@@ -6,6 +6,7 @@
 package ventanas;
 
 import clases.Conexio;
+import java.awt.Color;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -30,7 +31,18 @@ public class VerJuego extends javax.swing.JDialog {
         this.setTitle(juego);
         this.obtenerJuego();
         this.obtenerPlataformas();
+        this.getContentPane().setBackground(new Color (243,245,246));
     }
+    
+    /**
+     * incicialitzam les variables al constructor (juego),ja que ho passam per parametre.
+     * Cridam els metodes al constructor, de manera quan obrim el dialog es cridara als metodes
+     * i es mostrarà la informació corresponent.
+     */
+    
+    /**
+     * Feim una select de tot el que hi ha a jocs on el nom de joc sigui el nom inicialitzat al constructor.
+     */
     
     private void obtenerJuego() {
         Conexio mysql = new Conexio();
@@ -58,6 +70,10 @@ public class VerJuego extends javax.swing.JDialog {
         }
 
     }
+    /**
+     * Es fa una select de plataformas per obtenir el nom d'aquestes que el joc en el que facem doble click
+     * mostrara les plataformes a les que existeix.
+     */
     
     private void obtenerPlataformas(){
         Conexio mysql = new Conexio();
@@ -105,16 +121,17 @@ public class VerJuego extends javax.swing.JDialog {
         jTablePlataformas = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(400, 300));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel2.setText("Multijugador");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 60, 70, 20));
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 40, 70, 20));
 
         labelMultijugador.setText("jLabel4");
-        getContentPane().add(labelMultijugador, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 70, -1, -1));
+        getContentPane().add(labelMultijugador, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 40, 50, 20));
 
         jButtonVerPropietarios.setText("Ver propietarios");
-        getContentPane().add(jButtonVerPropietarios, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 90, -1, -1));
+        getContentPane().add(jButtonVerPropietarios, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 60, 120, -1));
 
         jButtonVerCalificaciones.setText("Ver Calificaciones");
         jButtonVerCalificaciones.addActionListener(new java.awt.event.ActionListener() {
@@ -122,7 +139,7 @@ public class VerJuego extends javax.swing.JDialog {
                 jButtonVerCalificacionesActionPerformed(evt);
             }
         });
-        getContentPane().add(jButtonVerCalificaciones, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 50, -1, -1));
+        getContentPane().add(jButtonVerCalificaciones, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 20, 120, -1));
 
         jTablePlataformas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -134,7 +151,7 @@ public class VerJuego extends javax.swing.JDialog {
         ));
         jScrollPane1.setViewportView(jTablePlataformas);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, 330, 150));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, 340, 120));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

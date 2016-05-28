@@ -83,11 +83,11 @@ public class ConsultarJuego extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Nombre", "Propietario"
+                "Propietario", "Nombre Del Juego", "Descripcion Del Juego"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false
+                false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -104,6 +104,7 @@ public class ConsultarJuego extends javax.swing.JDialog {
         if (jTableConsultarJuegos.getColumnModel().getColumnCount() > 0) {
             jTableConsultarJuegos.getColumnModel().getColumn(0).setResizable(false);
             jTableConsultarJuegos.getColumnModel().getColumn(1).setResizable(false);
+            jTableConsultarJuegos.getColumnModel().getColumn(2).setResizable(false);
         }
 
         jComboBoxPlataforma.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Todos", "PS3", "PS4", "PS Vita", "PC", "MAC", "Web", "Wii", "Wii U", "3DS", "Android", "iPhone", "Xbox 360", "Xbox One" }));
@@ -181,8 +182,8 @@ public class ConsultarJuego extends javax.swing.JDialog {
         String plataforma = jComboBoxPlataforma.getSelectedItem().toString();
         Conexio mysql = new Conexio();
         Connection con = mysql.conectar();
-        String [] titulos = {"Nombre","Propietario","Id"};
-        String[] registro = new String[3];
+        String [] titulos = {"Propietario","Nombre del Juego","Descripcion Del Juego","Id"};
+        String[] registro = new String[4];
         modelo = new DefaultTableModel(null, titulos);
         String sSQL = "";
         
@@ -192,13 +193,12 @@ public class ConsultarJuego extends javax.swing.JDialog {
          * corresposin, apareixerá null per cada de les columnes de la taula de la dreta.
          * Al primer join accedim a la taula usuarios_has_juegos per saber els usuaris que tenen el joc.
          * Al segon left join accedim a la taula usuari per obtenir el nom del usuari que te algun joc asignat.
-         * Al tercer i el cuart obtenim el nom de la plataforma que te asignada el joc corresponent (NombreJuego).
-         * Al darrer join obtenem la calificació que te asignada el joc corresponent (NombreJuego).
+         * Al tercer i el cuart obtenim el nom de la plataforma que te asignada el joc corresponent (NombreJuego).  
          * Al where tenim 1 = 1. Es un recurs per poder validar si o si una clausula where i poder afegir AND.
          * Ho emplei en aquest cas per poder concatenar les consultes nombrejuego,propietario i plataforma amb la sentencia sql.
          * i per tenir les tres variables a condicions AND.
          */
-        sSQL = "select distinct j.NombreJuego, u.NombreUsuario,u.Dni " //dades que s'han de mostrar
+        sSQL = "select distinct u.NombreUsuario,j.NombreJuego,j.DescripcionJuego,u.Dni " //dades que s'han de mostrar
                 + "from juegos j left join usuarios_has_juegos uj on j.NombreJuego = uj.Juegos_NombreJuego "
                 + "left join juegos_has_plataformas jp on j.NombreJuego = jp.Juegos_NombreJuego "
                 + "left join plataformas p on p.IdPlataforma = jp.Plataformas_IdPlataforma "
@@ -230,16 +230,17 @@ public class ConsultarJuego extends javax.swing.JDialog {
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery(sSQL);
             while (rs.next()) {
-
-                registro[0] = rs.getString("j.NombreJuego");
-                registro[1] = rs.getString("u.NombreUsuario");
-                registro[2] = rs.getString("u.Dni");
+ 
+                registro[0] = rs.getString("u.NombreUsuario");
+                registro[1] = rs.getString("j.NombreJuego");
+                registro[2] = rs.getString("j.DescripcionJuego");         
+                registro[3] = rs.getString("u.Dni");
                 modelo.addRow(registro);
             }
 
             jTableConsultarJuegos.setModel(modelo);
-            jTableConsultarJuegos.getColumnModel().getColumn(2).setMinWidth(0);
-            jTableConsultarJuegos.getColumnModel().getColumn(2).setMaxWidth(0);
+            jTableConsultarJuegos.getColumnModel().getColumn(3).setMinWidth(0);
+            jTableConsultarJuegos.getColumnModel().getColumn(3).setMaxWidth(0);
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
 
