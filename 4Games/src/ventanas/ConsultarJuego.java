@@ -269,7 +269,7 @@ public class ConsultarJuego extends javax.swing.JDialog {
         
         if(evt.getClickCount()== 2){
             int row = jTableConsultarJuegos.rowAtPoint(evt.getPoint());
-            String juego = (String) jTableConsultarJuegos.getValueAt(row, 0);
+            String juego = (String) jTableConsultarJuegos.getValueAt(row, 1);
             VerJuego vj = new VerJuego(new javax.swing.JFrame(), true,juego);
             vj.setVisible(true);
         }
