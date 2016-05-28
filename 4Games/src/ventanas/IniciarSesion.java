@@ -134,7 +134,6 @@ public class IniciarSesion extends javax.swing.JFrame {
         // TODO add your handling code here:
         CrearCuenta cc = new CrearCuenta(this, rootPaneCheckingEnabled);
         cc.setVisible(true);
-        this.setVisible(false);
     }//GEN-LAST:event_jButtonCrearCuentaActionPerformed
 
     private void jButtonSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalirActionPerformed

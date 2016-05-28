@@ -62,6 +62,7 @@ public class CalificarJuego extends javax.swing.JDialog {
         jScrollPane1.setViewportView(jTextPaneComentario);
 
         jButtonGuardarJuego.setText("Guardar");
+        jButtonGuardarJuego.setToolTipText("");
         jButtonGuardarJuego.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonGuardarJuegoActionPerformed(evt);

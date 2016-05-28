@@ -147,6 +147,7 @@ public class MenuPrincipal extends javax.swing.JDialog {
         // TODO add your handling code here:
         CrearCuenta cc = new CrearCuenta(new javax.swing.JFrame(), true);
         cc.modificarUsuario(this.dni);
+        this.setVisible(false);
         cc.setVisible(true);
     }//GEN-LAST:event_jButtonModificarUsuarioActionPerformed
 

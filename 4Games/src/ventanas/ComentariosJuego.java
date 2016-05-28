@@ -38,7 +38,6 @@ public class ComentariosJuego extends javax.swing.JDialog {
     public ComentariosJuego(java.awt.Frame parent, boolean modal,String NombreJuego) { 
         super(parent, modal);
         this.NombreJuego = NombreJuego;
-        
         initComponents();
         this.setTitle("Comentarios juegos");
         this.getContentPane().setBackground(new Color (243,245,246));

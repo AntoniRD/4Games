@@ -156,7 +156,10 @@ public class CrearCuenta extends javax.swing.JDialog {
     private void jButtonCerrarVentanaCrearCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCerrarVentanaCrearCuentaActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
-
+        if(jButtonCrearUsuario.getText()=="Modificar"){
+            retornoMenu();
+        }
+        
     }//GEN-LAST:event_jButtonCerrarVentanaCrearCuentaActionPerformed
 
     /**
@@ -169,6 +172,7 @@ public class CrearCuenta extends javax.swing.JDialog {
             crearUsuario();
         } else {
             aplicarModificacion();
+            retornoMenu();
         }
     }//GEN-LAST:event_jButtonCrearUsuarioActionPerformed
 
@@ -192,35 +196,32 @@ public class CrearCuenta extends javax.swing.JDialog {
         Conexio mysql = new Conexio();
         Connection cn = mysql.conectar();
 
-        query = "DELETE FROM usuarios_has_juegos WHERE Usuarios_Dni = '" + dni + "'";
+        boolean delusuarios_has_juegos = borrarusuarios_has_juegos(cn);
+        boolean delCalificacion = borrarCalificacion(cn);
+        boolean delUsuario = borrarUsuario(cn);
 
+        //query = "DELETE FROM usuarios_has_juegos WHERE Usuarios_Dni = '" + dni + "'";
         try {
-            PreparedStatement pst = cn.prepareStatement(query);
-            n = pst.executeUpdate();
-            System.out.println("usuarios_has_juegos");
-            if (n > 0) {
-                query = "DELETE FROM calificaciones WHERE Usuarios_Dni = '" + dni + "'";
-                PreparedStatement pst2 = cn.prepareStatement(query);
-                System.out.println("calificaciones");
-                m = pst2.executeUpdate();
-                if (m > 0) {
-                    query = "DELETE FROM usuarios WHERE Dni = '" + dni + "'";
-                    PreparedStatement pst3 = cn.prepareStatement(query);
-                    System.out.println("usuarios");
-                    o = pst3.executeUpdate();
-                    if (o > 0) {
-                        JOptionPane.showMessageDialog(null, "Usuario eliminado satisfactoriamente.");
-                        MenuPrincipal mp = new MenuPrincipal(new javax.swing.JFrame(), true);
-                        mp.setVisible(false);
-                        this.setVisible(false);
-                        IniciarSesion is = new IniciarSesion();
-                        is.setVisible(true);
-                    }
-                }
+            JOptionPane.showMessageDialog(null, "Usuario borrado");
+            if (delusuarios_has_juegos) {
+                System.out.println("tabla relacionada entre Usuarios y Calificaciones");
             }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } finally {
+            if (delCalificacion) {
+                System.out.println("tabla Calificaciones");
+            }
+            if (delUsuario) {
+                System.out.println("tabla Usuario");
+            }
+            
+            // Cerrando ventanas
+            this.setVisible(false);
+            new MenuPrincipal(new javax.swing.JFrame(), true).setVisible(false);
+            new IniciarSesion().setVisible(true);
+            
+        }catch(Exception ex){
+            JOptionPane.showMessageDialog(null, "Error no controlado: " + ex.getMessage());
+        }
+        finally {
             if (cn != null) {
                 try {
                     cn.close();
@@ -231,6 +232,57 @@ public class CrearCuenta extends javax.swing.JDialog {
             }
         }
     }//GEN-LAST:event_jButtonEliminarActionPerformed
+
+    private boolean borrarusuarios_has_juegos(Connection con) {
+        String query = "DELETE FROM usuarios_has_juegos WHERE Dni = ?";
+        boolean aux = false;
+        int n;
+        try {
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, dni);
+            n = ps.executeUpdate();
+            if (n > 0) {
+                aux = true;
+            }
+        } catch (Exception e) {
+            aux = false;
+        }
+        return aux;
+    }
+
+    private boolean borrarCalificacion(Connection con) {
+        String query = "DELETE FROM Calificaciones WHERE Dni = ?";
+        boolean aux = false;
+        int n;
+        try {
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, dni);
+            n = ps.executeUpdate();
+            if (n > 0) {
+                aux = true;
+            }
+        } catch (Exception e) {
+            aux = false;
+        }
+        return aux;
+    }
+
+    private boolean borrarUsuario(Connection con) {
+        String query = "DELETE FROM Usuarios WHERE Dni = ?";
+        boolean aux = false;
+        int n;
+        try {
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, dni);
+            n = ps.executeUpdate();
+            if (n > 0) {
+                aux = true;
+            }
+        } catch (Exception e) {
+            aux = false;
+        }
+        return aux;
+    }
 
     /**
      * Comprueba que todas las casillas han sido rellenadas.
@@ -369,12 +421,10 @@ public class CrearCuenta extends javax.swing.JDialog {
                     validado = true;
                 }
             }
+        } else if (controlador > 1) {
+            JOptionPane.showMessageDialog(null, "Solo puedes introducir una @.");
         } else {
-            if (controlador > 1) {
-                JOptionPane.showMessageDialog(null, "Solo puedes introducir una @.");
-            } else {
-                JOptionPane.showMessageDialog(null, "No has introducido la @.");
-            }
+            JOptionPane.showMessageDialog(null, "No has introducido la @.");
         }
         return validado;
     }
@@ -434,8 +484,6 @@ public class CrearCuenta extends javax.swing.JDialog {
                         if (validarCorreo(correo)) {
                             if (!comprobarExistencia(dni)) {
                                 insertarUsuario();
-                                IniciarSesion is = new IniciarSesion();
-                                is.setVisible(true);
                                 this.setVisible(false);
                             }
                         } else {
@@ -524,7 +572,6 @@ public class CrearCuenta extends javax.swing.JDialog {
             if (n > 0) {
                 JOptionPane.showMessageDialog(null, "Usuario modificado satisfactoriamente.");
             }
-            this.setVisible(false);
         } catch (SQLException ex) {
             ex.printStackTrace();
         } finally {
@@ -537,6 +584,13 @@ public class CrearCuenta extends javax.swing.JDialog {
                 }
             }
         }
+    }
+    
+    private void retornoMenu(){
+        MenuPrincipal mp = new MenuPrincipal(new javax.swing.JFrame(), true);
+        mp.setDniIniciado(dni);
+        this.setVisible(false);
+        mp.setVisible(true);
     }
 
     /**
