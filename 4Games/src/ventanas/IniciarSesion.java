@@ -150,50 +150,44 @@ public class IniciarSesion extends javax.swing.JFrame {
         if (!dni.isEmpty()) {
             if (!passwd.isEmpty()) {
                 if (passwd.length() <= 45) {
-                //Conexión a base de datos.
-                Conexio mysql = new Conexio();
-                Connection conn = mysql.conectar();
+                    //Conexión a base de datos.
+                    Conexio mysql = new Conexio();
+                    Connection conn = mysql.conectar();
 
-                query = "SELECT * FROM Usuarios "
-                        + "WHERE Dni='" + dni + "' AND Password='" + passwd + "'";
+                    query = "SELECT * FROM Usuarios "
+                            + "WHERE Dni='" + dni + "' AND Password='" + passwd + "'";
 
-                try {
-                    //Ejecución de consulta.
-                    Statement st = conn.createStatement();
-                    ResultSet rs = st.executeQuery(query);
+                    try {
+                        //Ejecución de consulta.
+                        Statement st = conn.createStatement();
+                        ResultSet rs = st.executeQuery(query);
 
-                    //Si encuentra la tupla, el usuario existe.
-                    if (rs.next()) {
-                        //Si el usuario esta dado de alta, muestra el menú con
-                        // todas las opciones disponibles.
-                        MenuPrincipal mp = new MenuPrincipal(new javax.swing.JFrame(), true);
-                        mp.setDniIniciado(dni);
-                        //if(){
-                       // esto importa las platafomas,luego hay que quitarlo   
-                       // importarCSV();
-                        //}
-                        //else{
-                            
-                        //}
-                        this.setVisible(false);
-                        mp.setVisible(true);
-                    } else {
-                        JOptionPane.showMessageDialog(null, "El usuario no esta registrado en la base de datos");
-                    }
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, "Error inesperado: " + ex.getMessage());
-                } finally {
-                    //Cierra la conexión con la base de datos.
-                    if (conn != null) {
-                        try {
-                            conn.close();
-                            conn = null;
-                        } catch (Exception e) {
-                            JOptionPane.showMessageDialog(null, "Error al cerrar conexiones: " + e.getMessage());
+                        //Si encuentra la tupla, el usuario existe.
+                        if (rs.next()) {
+                            //Si el usuario esta dado de alta, muestra el menú con
+                            // todas las opciones disponibles.
+                            MenuPrincipal mp = new MenuPrincipal(new javax.swing.JFrame(), true);
+                            mp.setDniIniciado(dni);
+                            importarCSV(conn);
+                            this.setVisible(false);
+                            mp.setVisible(true);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrecto");
+                        }
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(null, "Error inesperado: " + ex.getMessage());
+                    } finally {
+                        //Cierra la conexión con la base de datos.
+                        if (conn != null) {
+                            try {
+                                conn.close();
+                                conn = null;
+                            } catch (Exception e) {
+                                JOptionPane.showMessageDialog(null, "Error al cerrar conexiones: " + e.getMessage());
+                            }
                         }
                     }
-                }
-                }else{
+                } else {
                     JOptionPane.showMessageDialog(null, "La longitud máxima de la contraseña es de 45 caracteres");
                 }
             } else {
@@ -223,42 +217,64 @@ public class IniciarSesion extends javax.swing.JFrame {
     }
 
     /**
-     * Metode que a nes moment que te identifiques amb un usuari correcte,
-     * se carregue el fitxer csv que es troba a nes paquet 'clases' ImportPlataformas
-     * lletgeix el fitxer a la clase i a n'aquest metode crides es metode de lletgir el fitxer
-     * i el guarda a un arraylist,
-     * recorreix l'array i crea s'insert de totes ses plataformes fins que acaba el fitxer.
-     * @param evt 
+     * Metode que a nes moment que te identifiques amb un usuari correcte, se
+     * carregue el fitxer csv que es troba a nes paquet 'clases'
+     * ImportPlataformas lletgeix el fitxer a la clase i a n'aquest metode
+     * crides es metode de lletgir el fitxer i el guarda a un arraylist,
+     * recorreix l'array i crea s'insert de totes ses plataformes fins que acaba
+     * el fitxer,
+     * 
+     * se comprova que les plataformes existeixen, si les plataformes no existeixen,
+     * les carregue i fa s'insert a la base de dades, si existeixen, no fa res.
+     *
+     * @param evt
      */
-    private void importarCSV(){
-        
-        //conexion
-        Conexio mysql = new Conexio(); 
-        Connection con = mysql.conectar();
-        
+    private void importarCSV(Connection con) {
         String iSQL = "";
-        
+
         ImportPlataformas p = new ImportPlataformas();
-        
-        ArrayList <String> listaPlataformas = new ArrayList();
+
+        ArrayList<String> listaPlataformas = new ArrayList();
         listaPlataformas = p.leer(); //introduce el contenido del fixero (que se encuentra en la clase importPlataformas) en un arraylist
-        
+
         iSQL = "INSERT INTO Plataformas (NombrePlataforma) VALUES (?)"; //insert dentro de la tabla plataformas, el id es incrementativo.
-        
+
+        String selectP = "SELECT NombrePlataforma FROM Plataformas";
+
         try {
-            PreparedStatement ps = con.prepareStatement(iSQL); 
-            for (int i = 0; i < listaPlataformas.size(); i++) { //recorreix l'array e inserta a la base de dades
-                ps.setString(1, listaPlataformas.get(i));//inserta
-                int n = ps.executeUpdate();
-                if (n > 0) {
-                    JOptionPane.showMessageDialog(null, "Inserció satisfactòria");//si funciona bien
+            PreparedStatement ps = con.prepareStatement(iSQL);
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(selectP);
+            if (!rs.next()) {
+                for (int i = 0; i < listaPlataformas.size(); i++) { //recorreix l'array e inserta a la base de dades
+                    ps.setString(1, listaPlataformas.get(i));//inserta
+                    int n = ps.executeUpdate();
+                    if (n > 0) {
+                        System.out.println("Plataforma cargada: " + listaPlataformas.get(i));
+                    }
                 }
+            } else {
+                for (int i = 0; i < listaPlataformas.size(); i++) { //recorreix l'array e inserta a la base de dades
+                    if (!(rs.getString("NombrePlataforma").equalsIgnoreCase(listaPlataformas.get(i)))) {
+                        ps.setString(1, listaPlataformas.get(i));//inserta
+                        int n = ps.executeUpdate();
+                        if (n > 0) {
+                            System.out.println("Nueva Plataforma cargada: " + listaPlataformas.get(i));
+                            rs.next();
+                        }
+                    } else {
+                        System.out.println("Plataforma existe: " + listaPlataformas.get(i));
+                        rs.next();
+                    }
+                }
+                System.out.println("--------------");
             }
+
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage()); //error
         }
     }
-    
+
     /**
      * @param args the command line arguments
      */

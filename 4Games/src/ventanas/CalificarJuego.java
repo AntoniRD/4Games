@@ -133,20 +133,6 @@ public class CalificarJuego extends javax.swing.JDialog {
         this.setVisible(false);
     }//GEN-LAST:event_jButtonCerrarActionPerformed
     
-    
-    /**
-    private void comprobarCalificacion(){
-        
-        int numeroPuntuaciones;
-        String NombreJuego;
-        String plataforma;
-        String sSQL = "";
-        sSQL = "Select Puntuacion from calificaciones where NombreJuego ="; 
-        
-        if(NombreJeugo == NombreJuego && plataforma == plataforma)
-            puntuacion = puntuacion + valor / numeroPuntuaciones;
-    }
-    
     /**
      * metode que a nes moment de guarda, valida tots els camps e inserta el
      * contingut de tots els camps a sa base de dades de la taula
@@ -188,7 +174,7 @@ public class CalificarJuego extends javax.swing.JDialog {
             }
             //
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex);
+            JOptionPane.showMessageDialog(null, "Ya has comentado este juego");
         } finally {
             //Cierra la conexión con la base de datos.
             if (con != null) {
