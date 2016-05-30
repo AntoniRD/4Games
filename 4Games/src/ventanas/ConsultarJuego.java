@@ -48,7 +48,7 @@ public class ConsultarJuego extends javax.swing.JDialog {
         jButtonCerrar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableConsultarJuegos = new javax.swing.JTable();
-        jComboBoxPlataforma = new javax.swing.JComboBox<String>();
+        jComboBoxPlataforma = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -96,8 +96,8 @@ public class ConsultarJuego extends javax.swing.JDialog {
         });
         jTableConsultarJuegos.getTableHeader().setReorderingAllowed(false);
         jTableConsultarJuegos.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTableConsultarJuegosMouseClicked(evt);
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                jTableConsultarJuegosMouseReleased(evt);
             }
         });
         jScrollPane1.setViewportView(jTableConsultarJuegos);
@@ -107,7 +107,7 @@ public class ConsultarJuego extends javax.swing.JDialog {
             jTableConsultarJuegos.getColumnModel().getColumn(2).setResizable(false);
         }
 
-        jComboBoxPlataforma.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Todos", "PS3", "PS4", "PS Vita", "PC", "MAC", "Web", "Wii", "Wii U", "3DS", "Android", "iPhone", "Xbox 360", "Xbox One" }));
+        jComboBoxPlataforma.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos", "PS3", "PS4", "PS Vita", "PC", "MAC", "Web", "Wii", "Wii U", "3DS", "Android", "iPhone", "Xbox 360", "Xbox One" }));
         jComboBoxPlataforma.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxPlataformaActionPerformed(evt);
@@ -184,7 +184,13 @@ public class ConsultarJuego extends javax.swing.JDialog {
         Connection con = mysql.conectar();
         String [] titulos = {"Propietario","Nombre del Juego","Descripcion Del Juego","Id"};
         String[] registro = new String[4];
-        modelo = new DefaultTableModel(null, titulos);
+        //Ningun campo de la tabla es editable
+        modelo = new DefaultTableModel(null, titulos) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                    return false;}
+        };
+        jTableConsultarJuegos.setModel(modelo);
         String sSQL = "";
         
         /**
@@ -251,9 +257,7 @@ public class ConsultarJuego extends javax.swing.JDialog {
  
     private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
         // TODO add your handling code here
-        
         mostrarJuego();
-       
     }//GEN-LAST:event_jButtonBuscarActionPerformed
     
     
@@ -264,17 +268,15 @@ public class ConsultarJuego extends javax.swing.JDialog {
     
     
   
-    private void jTableConsultarJuegosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableConsultarJuegosMouseClicked
+    private void jTableConsultarJuegosMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableConsultarJuegosMouseReleased
         // TODO add your handling code here:
-        
         if(evt.getClickCount()== 2){
             int row = jTableConsultarJuegos.rowAtPoint(evt.getPoint());
             String juego = (String) jTableConsultarJuegos.getValueAt(row, 1);
             VerJuego vj = new VerJuego(new javax.swing.JFrame(), true,juego);
             vj.setVisible(true);
         }
-
-    }//GEN-LAST:event_jTableConsultarJuegosMouseClicked
+    }//GEN-LAST:event_jTableConsultarJuegosMouseReleased
 
     /**
      * @param args the command line arguments

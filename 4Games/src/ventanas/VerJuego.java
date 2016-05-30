@@ -80,7 +80,12 @@ public class VerJuego extends javax.swing.JDialog {
         Connection con = mysql.conectar();
         String [] titulos = {"Plataforma"};
         String [] registro = new String[1];
-        DefaultTableModel modelo = new DefaultTableModel(null,titulos);
+        //Ningun campo de la tabla es editable
+        DefaultTableModel modelo = new DefaultTableModel(null,titulos){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                    return false;}
+        };
         String sSQL = "select p.NombrePlataforma from juegos_has_plataformas jp "
             + "inner join plataformas p on jp.Plataformas_IdPlataforma = p.IdPlataforma "
             + "where Juegos_NombreJuego ='"+juego+"'";
